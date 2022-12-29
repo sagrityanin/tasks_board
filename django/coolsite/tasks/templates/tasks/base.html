@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{title}}</title>
+    <link type="text/css" href="{% static 'tasks/css/styles.css' %}" rel="stylesheet" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="{% static 'tasks/images/2.jpg' %}" type="image/x-icon"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<table class="table-page" border=0 cellpadding="0" cellspacing="0">
+<tr><td valign=top>
+{% block mainmenu %}
+		<div class="header">
+			<ul id="mainmenu" class="mainmenu">
+			<li class="logo"><a href="#"><div class="logo"></div></a></li>
+	{% for m in menu %}
+         {% if not forloop.last %}
+                            <li><a href="{{m.url_name}}">{{m.title}}</a></li>
+         {% else %}
+                            <li class="last"><a href="{{m.url_name}}">{{m.title}}</a></li>
+         {% endif %}
+	{% endfor %}
+			</ul>
+			<div class="clear"></div>
+		</div>
+{% endblock mainmenu %}
+<table class="table-content" border=0 cellpadding="0" cellspacing="0">
+<tr>
+<!-- Sidebar слева -->
+	<td valign="top" class="left-chapters">
+	<ul id="leftchapters">
+		<li><a href="/tasks/all/">Все задачи</a></li>
+		<li><a href="/tasks/created/">Активные</a></li>
+		<li><a href="/tasks/executed/">Выполненные</a></li>
+		<li><a href="/tasks/deprecated/">Отклоненные</a></li>
+		<li class="share">
+		</li>
+	</ul>
+    </td>
+</td>
+<!-- Конец Sidebar'а -->
+<td valign="top" class="content">
+	<!-- Хлебные крошки -->
+	{% block breadcrumbs %}
+	{% endblock %}
+<div class="content-text">
+    {% block content %}
+{% endblock %}
+</div>
+
+<!-- Footer -->
+<tr><td valign=top>
+	<div id="footer">
+		<p>2022 Created by sagrityanin</p>
+	</div>
+</td></tr></table>
+<!-- Конец footer'а и страницы -->
+</body>
+</html>

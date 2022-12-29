@@ -1,0 +1,27 @@
+{% extends 'tasks/base.html' %}
+ 
+{% block content %}
+<h1>{{title}}</h1>
+<ul class="list-articles">
+    <table>
+    {% for t in tasks %}
+         <li class="list-articles">
+            <tr class="firstLine">
+                <td colspan="100%"> <h4>{{t.title}}</h4>
+
+                    <p>Создан {{t.creator}}</p>
+                    <p>Создан для {{t.executor}}</p>
+                    <p>Статус задачи -  {{t.status}}</p>
+                 </td>
+                 <td style="width:200px"></td>
+                 <td><div class="clear"></div>
+			<p class="link-read-post"><a href="/task/{{t.id}}">Детали задачи</a></p></td>
+
+            </tr>
+<!--         <hr size=2px>-->
+         </li>
+
+         {% endfor %}
+</table>
+</ul>
+{% endblock %}
