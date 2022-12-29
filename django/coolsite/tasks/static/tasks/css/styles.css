@@ -170,11 +170,11 @@ div.button {
 	margin: 0;
 	background: #eee;
 	border-right: 1px solid #ccc;
-	min-height: 100%;
+	min-height: 80%;
 }
 .left-chapters ul {
-	width: 230px;
-	min-height: 100%;
+	width: 150px;
+	min-height: 80%;
 	margin: 0;
 	padding: 20px 10px 10px 20px;
 	list-style: none;

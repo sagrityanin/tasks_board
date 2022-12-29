@@ -26,12 +26,14 @@ class Status(models.TextChoices):
 
 
 class Task(TimeStampMixin, UUINMixin):
-    title = models.CharField(max_length=255)
-    note = models.TextField(blank=True)
-    is_visible = models.BooleanField(default=True)
-    status = models.TextField(_("Status"), choices=Status.choices, null=False, default="created")
-    creator = models.ForeignKey("User", on_delete=models.CASCADE, related_name="creator", blank=True)
-    executor = models.ForeignKey("User", on_delete=models.CASCADE, related_name="executor")
+    title = models.CharField(verbose_name=_('title'), max_length=255)
+    note = models.TextField(verbose_name=_('note'), blank=True)
+    is_visible = models.BooleanField(verbose_name=_('is_visible'), default=True)
+    status = models.TextField(verbose_name=_("Status"), choices=Status.choices, null=False, default="created")
+    creator = models.ForeignKey("User", verbose_name=_("creator"), on_delete=models.CASCADE,
+                                related_name="creator", blank=True)
+    executor = models.ForeignKey("User", verbose_name=_('executor'), on_delete=models.CASCADE,
+                                 related_name="executor")
 
     class Meta:
         db_table = "task"
@@ -51,10 +53,11 @@ class NoteChanal(models.TextChoices):
 
 
 class User(TimeStampMixin, UUINMixin):
-    name = models.CharField(max_length=255, unique=True)
-    is_executer = models.BooleanField(null=False, default=False, db_index=True)
-    # note_chanal = models.TextField(_("NoteChanal"), choices=NoteChanal.choices, null=False, default="telegramm")
-    # telegramm_id = models.CharField(max_length=255, null=True)
+    name = models.CharField(verbose_name=_('name'), max_length=255, unique=True)
+    is_executer = models.BooleanField(verbose_name=_("is_executer"), null=False, default=False, db_index=True)
+    # note_chanal = models.TextField(verbose_name=_("NoteChanal"), choices=NoteChanal.choices,
+    # null=False, default="telegramm")
+    # telegramm_id = models.CharField(verbose_name=_("telegram_id"), max_length=255, null=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:

@@ -9,7 +9,7 @@ from django.contrib import messages
 menu = [{'title': "О сайте", 'url_name': '/about'},
         {'title': "Добавить задачу", 'url_name': '/new-task'},
         {'title': "Список задач по категориям", 'url_name': '/tasks/all'},
-        {'title': "Войти", 'url_name': '/login'}]
+        {'title': "Выйти", 'url_name': '/logout'}]
 status = {"created": "Активные задачи", "executed": "Выполненые задачи",
           "deprecated": "Отклоненные задачи", "all": "Все задачи"}
 
@@ -18,7 +18,6 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ("title", 'note', 'is_visible', 'status', 'creator', 'executor')
-
 
 
 def index(request):
@@ -73,8 +72,8 @@ def about(request):
     return render(request, 'tasks/about.html', {'menu': menu, 'title': 'О сайте'})
 
 
-def login(request):
-    return HttpResponse("Здесь будет login")
+def logout(request):
+    return HttpResponse("Здесь будет logout")
 
 
 def pageNotFound(request, exception):
