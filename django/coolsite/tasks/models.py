@@ -1,5 +1,8 @@
 import uuid
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
@@ -53,18 +56,27 @@ class NoteChanal(models.TextChoices):
 
 
 class Person(TimeStampMixin, UUINMixin):
-    name = models.CharField(verbose_name=_('name'), max_length=255, unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_executer = models.BooleanField(verbose_name=_("is_executer"), null=False, default=False, db_index=True)
     # note_chanal = models.TextField(verbose_name=_("NoteChanal"), choices=NoteChanal.choices,
     # null=False, default="telegramm")
     # telegramm_id = models.CharField(verbose_name=_("telegram_id"), max_length=255, null=True)
-    is_active = models.BooleanField(default=True)
+    # is_active = models.BooleanField(default=True)
 
     class Meta:
-        db_table = "user"
+        db_table = "person"
         verbose_name = _("User")
         verbose_name_plural = _("Users")
 
     def __str__(self):
-        return self.name
+        return self.user.username
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Person.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.person.save()
 

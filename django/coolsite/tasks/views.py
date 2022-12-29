@@ -53,7 +53,7 @@ def edit_task(request, task_id):
         task_link = f"/task/{task_id}"
     return render(request, 'tasks/edit_task.html', {'form': form, 'menu': menu, 'title': 'Изменение задачи',
                                                    'created': task.time_created,
-                                                   'updated': task.time_updated, "creator": task.creator.name,
+                                                   'updated': task.time_updated, "creator": task.creator.user.username,
                                                     'task_link': task_link})
 
 
