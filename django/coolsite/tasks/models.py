@@ -30,9 +30,9 @@ class Task(TimeStampMixin, UUINMixin):
     note = models.TextField(verbose_name=_('note'), blank=True)
     is_visible = models.BooleanField(verbose_name=_('is_visible'), default=True)
     status = models.TextField(verbose_name=_("Status"), choices=Status.choices, null=False, default="created")
-    creator = models.ForeignKey("User", verbose_name=_("creator"), on_delete=models.CASCADE,
+    creator = models.ForeignKey("Person", verbose_name=_("creator"), on_delete=models.CASCADE,
                                 related_name="creator", blank=True)
-    executor = models.ForeignKey("User", verbose_name=_('executor'), on_delete=models.CASCADE,
+    executor = models.ForeignKey("Person", verbose_name=_('executor'), on_delete=models.CASCADE,
                                  related_name="executor")
 
     class Meta:
@@ -52,7 +52,7 @@ class NoteChanal(models.TextChoices):
     TELEGRAMM = "telegramm", _("telegramm")
 
 
-class User(TimeStampMixin, UUINMixin):
+class Person(TimeStampMixin, UUINMixin):
     name = models.CharField(verbose_name=_('name'), max_length=255, unique=True)
     is_executer = models.BooleanField(verbose_name=_("is_executer"), null=False, default=False, db_index=True)
     # note_chanal = models.TextField(verbose_name=_("NoteChanal"), choices=NoteChanal.choices,

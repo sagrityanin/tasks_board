@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
-from django import  forms
+from django import forms
 from .models import *
 from .forms import AddTaskForm, EditTaskForm
 from django.shortcuts import get_object_or_404
@@ -14,10 +14,10 @@ status = {"created": "Активные задачи", "executed": "Выполн�
           "deprecated": "Отклоненные задачи", "all": "Все задачи"}
 
 
-class TaskForm(forms.ModelForm):
-    class Meta:
-        model = Task
-        fields = ("title", 'note', 'is_visible', 'status', 'creator', 'executor')
+# class TaskForm(forms.ModelForm):
+#     class Meta:
+#         model = Task
+#         fields = ("title", 'note', 'is_visible', 'status', 'creator', 'executor')
 
 
 def index(request):
