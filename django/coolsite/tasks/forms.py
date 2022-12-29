@@ -10,6 +10,8 @@ from .models import *
 class AddTaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["executor"].queryset = User.objects.filter(is_executer=True)
+        self.fields["creator"].queryset = User.objects.all()
 
     class Meta:
         model = Task
@@ -29,6 +31,7 @@ class AddTaskForm(forms.ModelForm):
 class EditTaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["executor"].queryset = User.objects.filter(is_executer=True)
         if 'instance' in kwargs and kwargs['instance'].creator:
             self.fields['creator'].disabled = True
 
