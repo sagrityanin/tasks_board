@@ -1,0 +1,9 @@
+TAG="1.0"
+
+# Postgres
+POSTGRES_DB="tasks"
+POSTGRES_USER="app"
+POSTGRES_PASSWORD="123qwe"
+POSTGRES_HOST = "task_db"
+POSTGRES_PORT = 5432
+

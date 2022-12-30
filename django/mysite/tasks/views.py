@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User as UserClass
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
@@ -21,8 +22,8 @@ menu = [{"title": "О сайте", "url_name": "/about"},
         {"title": "Список задач по категориям", "url_name": "/tasks/all"},
         {"title": "Войти", "url_name": "/login"},
         {"title": "Выйти", "url_name": "/logout"}]
-status = {"created": "Активные задачи", "executed": "Выполненые задачи",
-          "deprecated": "Отклоненные задачи", "all": "Все задачи"}
+status = {"создана": "Активные задачи", "выполнена": "Выполненые задачи",
+          "отклонена": "Отклоненные задачи", "all": "Все задачи"}
 
 
 def index(request):
@@ -60,9 +61,13 @@ def edit_task(request, task_id):
         task = get_object_or_404(Task, pk=task_id)
         form = EditTaskForm(instance=task)
         task_link = f"/task/{task_id}"
+        if isinstance(task.creator, Person):
+            username = task.creator.user.username
+        elif isinstance(task.creator, UserClass):
+            username = task.creator.username
     return render(request, "tasks/edit_task.html", {"form": form, "menu": menu, "title": "Изменение задачи",
                                                    "created": task.time_created,
-                                                   "updated": task.time_updated, "creator": task.creator.user.username,
+                                                   "updated": task.time_updated, "creator": username,
                                                     "task_link": task_link})
 
 

@@ -23,23 +23,24 @@ class UUINMixin(models.Model):
 
 
 class Status(models.TextChoices):
-    CREATED = "created", _("created")
-    EXECUTED = "executed", _("executed")
-    DEPRECATED = "deprecated", _("deprecated")
+    CREATED = "создана", _("created")
+    EXECUTED = "выполнена", _("executed")
+    DEPRECATED = "отклонена", _("deprecated")
 
 
 class Task(TimeStampMixin, UUINMixin):
     title = models.CharField(verbose_name=_('title'), max_length=255)
+    test = models.CharField(verbose_name=_('title'), max_length=255)
     note = models.TextField(verbose_name=_('note'), blank=True)
     is_visible = models.BooleanField(verbose_name=_('is_visible'), default=True)
-    status = models.TextField(verbose_name=_("Status"), choices=Status.choices, null=False, default="created")
+    status = models.TextField(verbose_name=_("Status"), choices=Status.choices, null=False, default="создана")
     creator = models.ForeignKey("Person", verbose_name=_("creator"), on_delete=models.CASCADE,
-                                related_name="creator", blank=True)
+                                related_name="creator")
     executor = models.ForeignKey("Person", verbose_name=_('executor'), on_delete=models.CASCADE,
                                  related_name="executor")
 
     class Meta:
-        db_table = "task"
+        db_table = '"tasks"."task"'
         indexes = [models.Index(fields=["status", "creator_id", "executor_id"])]
         verbose_name = _("Task")
         verbose_name_plural = _("Tasks")
@@ -58,13 +59,12 @@ class NoteChanal(models.TextChoices):
 class Person(TimeStampMixin, UUINMixin):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_executer = models.BooleanField(verbose_name=_("is_executer"), null=False, default=False, db_index=True)
-    # note_chanal = models.TextField(verbose_name=_("NoteChanal"), choices=NoteChanal.choices,
-    # null=False, default="telegramm")
-    # telegramm_id = models.CharField(verbose_name=_("telegram_id"), max_length=255, null=True)
-    # is_active = models.BooleanField(default=True)
+    note_chanal = models.TextField(verbose_name=_("NoteChanal"), choices=NoteChanal.choices,
+        null=True, default="telegramm")
+    telegramm_id = models.CharField(verbose_name=_("telegram_id"), max_length=255, blank=True)
 
     class Meta:
-        db_table = "person"
+        db_table = '"tasks"."person"'
         verbose_name = _("User")
         verbose_name_plural = _("Users")
 

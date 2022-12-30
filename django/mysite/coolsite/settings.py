@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-y0#t4%7o+^y(fjrl^-1z*n+$x#*ig%b$tsci_6y!)o))ui!wfw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1", "192.168.1.94", "task-app"]
 
 
 # Application definition
@@ -79,8 +79,14 @@ WSGI_APPLICATION = "coolsite.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        # "ENGINE": "django.db.backends.sqlite3",
+        # "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": os.getenv("POSTGRES_HOST"),
+        "PORT": os.getenv("POSTGRES_PORT"),
     }
 }
 
@@ -107,6 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
+LOCALE_PATHS = ["tasks/locale"]
 LANGUAGE_CODE = "ru-RU"
 
 TIME_ZONE = "Asia/Yekaterinburg"
@@ -131,5 +138,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
