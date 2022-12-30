@@ -60,14 +60,21 @@ def edit_task(request, task_id):
 @login_required(login_url="/about/")
 @transaction.atomic
 def new_task(request):
-    print(request.user)
+    current_user = request.user
     if request.method == "POST":
-        form = AddTaskForm(request.POST)
+        form = AddTaskForm(request.POST, current_user=current_user)
+        print("post")
         if form.is_valid():
+            print(current_user.person.id)
+            Task.creator = current_user
+            # form.fields["creator"] = forms.CharField(current_user.person.id)
+            # print(form.fields["creator"])
+            print(form.fields["title"])
             form.save()
+            print("task created")
             return redirect("tasks")
     else:
-        form = AddTaskForm()
+        form = AddTaskForm(current_user=current_user)
     return render(request, "tasks/new_task.html", {"form": form, "menu": menu, "title": "Добавление задачи"})
 
 
