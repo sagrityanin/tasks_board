@@ -5,11 +5,16 @@ from django.shortcuts import render, redirect
 from django import forms
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+import logging
+
 from .models import *
 from .forms import AddTaskForm, EditTaskForm
 from tasks.service.user import check_user_in_creator_executer
 from tasks.service.task import get_tasks
+from tasks.service.logging import LOGGING
 
+
+logging.config.dictConfig(LOGGING)
 
 menu = [{"title": "О сайте", "url_name": "/about"},
         {"title": "Добавить задачу", "url_name": "/new-task"},
@@ -49,6 +54,7 @@ def edit_task(request, task_id):
         if form.is_valid():
             Task.creator = Task.objects.get(pk=task_id).creator
             form.save()
+            logging.info(f"{request.user} made task")
             return redirect("tasks")
     else:
         task = get_object_or_404(Task, pk=task_id)
@@ -66,15 +72,10 @@ def new_task(request):
     current_user = request.user
     if request.method == "POST":
         form = AddTaskForm(request.POST, current_user=current_user)
-        print("post")
         if form.is_valid():
-            print(current_user.person.id)
             Task.creator = current_user
-            # form.fields["creator"] = forms.CharField(current_user.person.id)
-            # print(form.fields["creator"])
-            print(form.fields["title"])
             form.save()
-            print("task created")
+            logging.info(f"{current_user} made task")
             return redirect("tasks")
     else:
         form = AddTaskForm(current_user=current_user)
