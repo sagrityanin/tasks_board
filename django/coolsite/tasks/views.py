@@ -3,10 +3,18 @@ from django.db import transaction
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
 from django import forms
-from .models import *
-from .forms import AddTaskForm, EditTaskForm
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+import logging
+
+from .models import *
+from .forms import AddTaskForm, EditTaskForm
+from tasks.service.user import check_user_in_creator_executer
+from tasks.service.task import get_tasks
+from tasks.service.logging import LOGGING
+
+
+logging.config.dictConfig(LOGGING)
 
 menu = [{"title": "О сайте", "url_name": "/about"},
         {"title": "Добавить задачу", "url_name": "/new-task"},
@@ -23,12 +31,10 @@ def index(request):
 
 @login_required(login_url="/about/")
 def tasks(request, category):
-    if category == "all":
-        tasks = Task.objects.all().order_by("-time_updated")
-    elif category not in status:
+
+    if category not in status and category != "all":
         return HttpResponse("Заданная категория задач отсутствует")
-    else:
-        tasks = Task.objects.filter(status=category).order_by("-time_updated")
+    tasks = get_tasks(request, category)
     context = {
         "tasks": tasks,
         "menu": menu,
@@ -43,9 +49,12 @@ def edit_task(request, task_id):
     if request.method == "POST":
         instance = Task.objects.get(pk=task_id)
         form = EditTaskForm(request.POST, instance=instance)
+        if not check_user_in_creator_executer(request, task_id):
+            return HttpResponseNotFound(f"<h1>У пользователя: {request.user} нет прав для редактирования этой задачи</h1>")
         if form.is_valid():
             Task.creator = Task.objects.get(pk=task_id).creator
             form.save()
+            logging.info(f"{request.user} made task")
             return redirect("tasks")
     else:
         task = get_object_or_404(Task, pk=task_id)
@@ -63,15 +72,10 @@ def new_task(request):
     current_user = request.user
     if request.method == "POST":
         form = AddTaskForm(request.POST, current_user=current_user)
-        print("post")
         if form.is_valid():
-            print(current_user.person.id)
             Task.creator = current_user
-            # form.fields["creator"] = forms.CharField(current_user.person.id)
-            # print(form.fields["creator"])
-            print(form.fields["title"])
             form.save()
-            print("task created")
+            logging.info(f"{current_user} made task")
             return redirect("tasks")
     else:
         form = AddTaskForm(current_user=current_user)
