@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-29 16:10+0500\n"
+"POT-Creation-Date: 2022-12-30 17:43+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,66 +18,70 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: tasks/apps.py:8 tasks/models.py:42
+#: tasks/apps.py:8 tasks/models.py:46
 msgid "Tasks"
 msgstr ""
 
-#: tasks/forms.py:16 tasks/models.py:33
-msgid "creator"
-msgstr ""
-
-#: tasks/models.py:23
+#: tasks/models.py:26
 msgid "created"
 msgstr ""
 
-#: tasks/models.py:24
+#: tasks/models.py:27
 msgid "executed"
 msgstr ""
 
-#: tasks/models.py:25
+#: tasks/models.py:28
 msgid "deprecated"
 msgstr ""
 
-#: tasks/models.py:29
+#: tasks/models.py:32 tasks/models.py:33
 msgid "title"
 msgstr ""
 
-#: tasks/models.py:30
+#: tasks/models.py:34
 msgid "note"
 msgstr ""
 
-#: tasks/models.py:31
+#: tasks/models.py:35
 msgid "is_visible"
 msgstr ""
 
-#: tasks/models.py:32
+#: tasks/models.py:36
 msgid "Status"
 msgstr ""
 
-#: tasks/models.py:35
+#: tasks/models.py:37
+msgid "creator"
+msgstr ""
+
+#: tasks/models.py:39
 msgid "executor"
 msgstr ""
 
-#: tasks/models.py:41
+#: tasks/models.py:45
 msgid "Task"
 msgstr ""
 
-#: tasks/models.py:52
+#: tasks/models.py:56
 msgid "telegramm"
 msgstr ""
 
-#: tasks/models.py:56
-msgid "name"
-msgstr ""
-
-#: tasks/models.py:57
+#: tasks/models.py:61
 msgid "is_executer"
 msgstr ""
 
-#: tasks/models.py:65
+#: tasks/models.py:62
+msgid "NoteChanal"
+msgstr ""
+
+#: tasks/models.py:64
+msgid "telegram_id"
+msgstr ""
+
+#: tasks/models.py:68
 msgid "User"
 msgstr ""
 
-#: tasks/models.py:66
+#: tasks/models.py:69
 msgid "Users"
 msgstr ""

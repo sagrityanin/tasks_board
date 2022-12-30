@@ -10,7 +10,6 @@ from .models import Task, Person
 
 class AddTaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        print(kwargs)
         current_user = kwargs.get("current_user")
         super().__init__(*args)
         self.fields["executor"] = forms.ModelChoiceField(label="Назначен",
@@ -44,7 +43,6 @@ class EditTaskForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["executor"] = forms.ModelChoiceField(label="Назначен",
                                                          queryset=Person.objects.filter(is_executer=True))
-        # self.fields["executor"].queryset = Person.objects.filter(is_executer=True)
         self.fields["creator"] = forms.ModelChoiceField(label="Создан", queryset=Person.objects.all())
         if "instance" in kwargs and kwargs["instance"].creator:
             self.fields["creator"].disabled = True
