@@ -4,8 +4,9 @@
 <h1>{{title}}</h1>
 <ul class="list-articles">
     <table>
-    {% for t in tasks %}
-         <li class="list-articles">
+    <li class="list-articles">
+        {% for t in tasks %}
+
             <tr class="firstLine">
                 <td colspan="100%"> <h4>{{t.title}}</h4>
 
@@ -19,9 +20,10 @@
 
             </tr>
 <!--         <hr size=2px>-->
-         </li>
+
 
          {% endfor %}
+        </li>
 </table>
 </ul>
 {% endblock %}
