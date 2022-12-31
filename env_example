@@ -7,3 +7,9 @@ POSTGRES_PASSWORD="123qwe"
 POSTGRES_HOST = "task_db"
 POSTGRES_PORT = 5432
 
+
+#Django
+DJANGO_SECRET_KEY = "django_key"
+DJANGO_DEBUG = True
+ALLOWED_HOSTS = "task.info66.ru"
+CSRF_TRUSTED_ORIGINS = "http://task.info66.ru:8080"
