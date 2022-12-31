@@ -17,17 +17,23 @@ from tasks.service.logging import LOGGING
 
 logging.config.dictConfig(LOGGING)
 
-menu = [{"title": "О сайте", "url_name": "/about"},
-        {"title": "Добавить задачу", "url_name": "/new-task"},
-        {"title": "Список задач по категориям", "url_name": "/tasks/all"},
-        {"title": "Войти", "url_name": "/login"},
-        {"title": "Выйти", "url_name": "/logout"}]
+
 status = {"создана": "Активные задачи", "выполнена": "Выполненые задачи",
           "отклонена": "Отклоненные задачи", "all": "Все задачи"}
 
 
+def get_menu(request):
+    menu = [{"title": "О сайте", "url_name": "/about"},
+            {"title": "Добавить задачу", "url_name": "/new-task"},
+            {"title": "Список задач по категориям", "url_name": "/tasks/all"},
+            {"title": "Войти", "url_name": "/login"},
+            {"title": "Выйти", "url_name": "/logout"},
+            {"title": request.user, "url_name": "#"}]
+    return menu
+
+
 def index(request):
-    return render(request, "tasks/index.html", {"menu": menu, "title": "Главная страница"})
+    return render(request, "tasks/index.html", {"menu": get_menu(request), "title": "Главная страница"})
 
 
 @login_required(login_url="/about/")
@@ -38,7 +44,7 @@ def tasks(request, category):
     tasks = get_tasks(request, category)
     context = {
         "tasks": tasks,
-        "menu": menu,
+        "menu": get_menu(request),
         "title": status[category]
     }
     return render(request, "tasks/tasks.html", context=context)
@@ -65,9 +71,10 @@ def edit_task(request, task_id):
             username = task.creator.user.username
         elif isinstance(task.creator, UserClass):
             username = task.creator.username
-    return render(request, "tasks/edit_task.html", {"form": form, "menu": menu, "title": "Изменение задачи",
-                                                   "created": task.time_created,
-                                                   "updated": task.time_updated, "creator": username,
+    return render(request, "tasks/edit_task.html", {"form": form, "menu": get_menu(request),
+                                                    "title": "Изменение задачи",
+                                                    "created": task.time_created,
+                                                    "updated": task.time_updated, "creator": username,
                                                     "task_link": task_link})
 
 
@@ -83,11 +90,12 @@ def new_task(request):
             return redirect("tasks")
     else:
         form = AddTaskForm(current_user=current_user)
-    return render(request, "tasks/new_task.html", {"form": form, "menu": menu, "title": "Добавление задачи"})
+    return render(request, "tasks/new_task.html", {"form": form, "menu": get_menu(request),
+                                                   "title": "Добавление задачи"})
 
 
 def about(request):
-    return render(request, "tasks/about.html", {"menu": menu, "title": "О сайте"})
+    return render(request, "tasks/about.html", {"menu": get_menu(request), "title": "О сайте"})
 
 
 def pageNotFound(request, exception):

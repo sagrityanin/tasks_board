@@ -3,3 +3,6 @@
 django/coolsite/coolsite/__pycache__/*
 django/coolsite/tasks/__pycache__/*
 /temp/
+/tests/venv/
+/tests/.env
+/tests/geckodriver.log
