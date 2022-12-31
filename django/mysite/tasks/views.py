@@ -78,7 +78,6 @@ def new_task(request):
     if request.method == "POST":
         form = AddTaskForm(request.POST, current_user=current_user)
         if form.is_valid():
-            Task.creator = current_user
             form.save()
             logging.info(f"{current_user} made task")
             return redirect("tasks")

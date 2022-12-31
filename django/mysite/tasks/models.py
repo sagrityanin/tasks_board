@@ -30,7 +30,6 @@ class Status(models.TextChoices):
 
 class Task(TimeStampMixin, UUINMixin):
     title = models.CharField(verbose_name=_('title'), max_length=255)
-    test = models.CharField(verbose_name=_('title'), max_length=255)
     note = models.TextField(verbose_name=_('note'), blank=True)
     is_visible = models.BooleanField(verbose_name=_('is_visible'), default=True)
     status = models.TextField(verbose_name=_("Status"), choices=Status.choices, null=False, default="создана")

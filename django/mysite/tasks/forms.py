@@ -22,7 +22,6 @@ class AddTaskForm(forms.ModelForm):
 
 
     class Meta:
-        cr = Person.objects.all()
         model = Task
         fields = ["title", "note", "is_visible", "creator", "executor"]
         widgets = {
