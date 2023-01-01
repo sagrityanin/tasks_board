@@ -2,9 +2,12 @@
  
 {% block content %}
 <h1>{{title}}</h1>
+<h5>Всего найдено {{task_count}} задач</h5>
+<h5>Всего {{page_count}} страниц</h5>
+
 <ul class="list-articles">
     <table>
-    <li class="list-articles">
+        <li class="list-articles">
         {% for t in tasks %}
 
             <tr class="firstLine">

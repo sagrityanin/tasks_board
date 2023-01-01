@@ -1,18 +1,22 @@
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.http import HttpResponse, HttpResponseNotFound
+import logging
+import math
 import os
 
-from django.db.models import Q
-import logging
 from tasks.models import Task, User
 from .celery_producer import send_telegram
 
 
-def get_tasks(request, category):
+def get_tasks(request, category: str):
     if category == "all":
         tasks = Task.objects.filter(Q(creator=request.user.person) | Q(executor=request.user.person) |
                                     Q(is_visible=True)).order_by("-time_updated")
     else:
         tasks = Task.objects.filter(Q(creator=request.user.person) | Q(executor=request.user.person) |
                                     Q(is_visible=True)).filter(status=category).order_by("-time_updated")
+
     return tasks
 
 
