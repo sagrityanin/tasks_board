@@ -16,10 +16,14 @@
 			<ul id="mainmenu" class="mainmenu">
 			<li class="logo"><a href="#"><div class="logo"></div></a></li>
 	{% for m in menu %}
-         {% if forloop.revcounter > 3 %}
-                            <li><a href="{{m.url_name}}">{{m.title}}</a></li>
+         {% if forloop.revcounter > 2 %}
+				<li><a href="{{m.url_name}}">{{m.title}}</a></li>
          {% else %}
-                            <li class="last"><a href="{{m.url_name}}">{{m.title}}</a></li>
+				{% if m.url_name == "#" %}
+					<li class="last"><a>{{m.title}}</a></li>
+				{% else %}
+					<li class="last"><a href="{{m.url_name}}">{{m.title}}</a></li>
+				{% endif %}
          {% endif %}
 	{% endfor %}
 			</ul>
