@@ -84,9 +84,10 @@ def new_task(request):
     if request.method == "POST":
         form = AddTaskForm(request.POST, current_user=current_user)
         if form.is_valid():
-
             form.save()
-            send_note(form.cleaned_data["title"], form.cleaned_data["executor"])
+            task = Task.objects.filter(executor=form.cleaned_data["executor"]).filter(
+                status="создана").order_by("-time_updated")[0]
+            send_note(form.cleaned_data["title"], form.cleaned_data["executor"], task)
             logging.info(f"{current_user} made task")
             return redirect("tasks")
     else:
