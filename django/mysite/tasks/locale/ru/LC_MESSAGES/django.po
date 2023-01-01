@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-30 17:43+0500\n"
+"POT-Creation-Date: 2023-01-01 13:42+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: tasks/apps.py:8 tasks/models.py:46
+#: tasks/apps.py:8 tasks/models.py:45
 msgid "Tasks"
 msgstr "Задачи"
 
@@ -36,41 +36,45 @@ msgstr "выполнен"
 msgid "deprecated"
 msgstr "отменен"
 
-#: tasks/models.py:32 tasks/models.py:33
+#: tasks/models.py:32
 msgid "title"
 msgstr "Цель задачи"
 
-#: tasks/models.py:34
+#: tasks/models.py:33
 msgid "note"
 msgstr "Примечание"
 
-#: tasks/models.py:35
+#: tasks/models.py:34
 msgid "is_visible"
 msgstr "видимая задача для других сотрудников"
 
-#: tasks/models.py:36
+#: tasks/models.py:35
 msgid "Status"
 msgstr "Статус"
 
-#: tasks/models.py:37
+#: tasks/models.py:36
 #, fuzzy
 #| msgid "created"
 msgid "creator"
 msgstr "создана"
 
-#: tasks/models.py:39
+#: tasks/models.py:38
 #, fuzzy
 #| msgid "executed"
 msgid "executor"
 msgstr "назначена"
 
-#: tasks/models.py:45
+#: tasks/models.py:44
 msgid "Task"
 msgstr "Задача"
 
-#: tasks/models.py:56
+#: tasks/models.py:55
 msgid "telegramm"
 msgstr "телеграм"
+
+#: tasks/models.py:56
+msgid "absent"
+msgstr "Отсутствует"
 
 #: tasks/models.py:61
 #, fuzzy

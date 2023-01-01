@@ -8,7 +8,7 @@ from .celery import app
 
 @app.task(max_retries=10, autoretry_for=(Exception,), retry_backoff=3600)
 def send_telegram_message(telegram_id: str, message: str) -> bool:
-    with open("proj/res.txt", "a") as f:
+    with open("proj/celery.log", "a") as f:
         f.write(telegram_id + ", " + message + "\n" + str(datetime.now()))
         url = f"https://api.telegram.org/bot" + os.getenv("TELEGRAMM_TOKEN") + "/sendMessage"
         r = requests.post(url, data={

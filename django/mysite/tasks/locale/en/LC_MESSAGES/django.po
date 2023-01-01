@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-30 17:43+0500\n"
+"POT-Creation-Date: 2023-01-01 13:42+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: tasks/apps.py:8 tasks/models.py:46
+#: tasks/apps.py:8 tasks/models.py:45
 msgid "Tasks"
 msgstr ""
 
@@ -34,36 +34,40 @@ msgstr ""
 msgid "deprecated"
 msgstr ""
 
-#: tasks/models.py:32 tasks/models.py:33
+#: tasks/models.py:32
 msgid "title"
 msgstr ""
 
-#: tasks/models.py:34
+#: tasks/models.py:33
 msgid "note"
 msgstr ""
 
-#: tasks/models.py:35
+#: tasks/models.py:34
 msgid "is_visible"
 msgstr ""
 
-#: tasks/models.py:36
+#: tasks/models.py:35
 msgid "Status"
 msgstr ""
 
-#: tasks/models.py:37
+#: tasks/models.py:36
 msgid "creator"
 msgstr ""
 
-#: tasks/models.py:39
+#: tasks/models.py:38
 msgid "executor"
 msgstr ""
 
-#: tasks/models.py:45
+#: tasks/models.py:44
 msgid "Task"
 msgstr ""
 
-#: tasks/models.py:56
+#: tasks/models.py:55
 msgid "telegramm"
+msgstr ""
+
+#: tasks/models.py:56
+msgid "absent"
 msgstr ""
 
 #: tasks/models.py:61
