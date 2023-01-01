@@ -36,8 +36,8 @@ def index(request):
     return render(request, "tasks/index.html", {"menu": get_menu(request), "title": "Главная страница"})
 
 
-class NewTasks(ListView):
-    allow_empty = False
+class Tasks(ListView):
+    allow_empty = True
     paginate_by = int(os.getenv("TASKS_ON_PAGE_COUNT"))
     model = Task
     http_method_names = ["get"]
@@ -48,6 +48,7 @@ class NewTasks(ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Список задач"
         context["category"] = self.kwargs["category"]
+        context["menu"] = get_menu(self.request)
         return context
 
     def get_queryset(self):

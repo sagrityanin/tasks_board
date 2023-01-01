@@ -1,7 +1,7 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path, re_path
 
-from tasks.views import index, tasks, new_task, about, edit_task, NewTasks
+from tasks.views import index, tasks, new_task, about, edit_task, Tasks
 
 urlpatterns = [
     path("", index, name="tasks"),
@@ -12,5 +12,5 @@ urlpatterns = [
     path("login/", auth_views.LoginView.as_view(template_name="tasks/login.html"), name="login",
          kwargs={'redirect_authenticated_user': True}),
     path("logout/", auth_views.LogoutView.as_view(template_name="tasks/logout.html"), name="logout"),
-    path("tasks/<str:category>/", NewTasks.as_view(), name="tasks_by_category")
+    path("tasks/<str:category>/", Tasks.as_view(), name="tasks_by_category")
 ]
