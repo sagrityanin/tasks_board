@@ -53,6 +53,7 @@ class Task(TimeStampMixin, UUINMixin):
 
 class NoteChanal(models.TextChoices):
     TELEGRAMM = "telegramm", _("telegramm")
+    ABSENT = "absent", _("absent")
 
 
 class Person(TimeStampMixin, UUINMixin):

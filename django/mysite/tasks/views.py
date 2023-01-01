@@ -11,23 +11,29 @@ import logging
 from .models import *
 from .forms import AddTaskForm, EditTaskForm
 from tasks.service.user import check_user_in_creator_executer
-from tasks.service.task import get_tasks
+from tasks.service.task import get_tasks, send_note
 from tasks.service.logging import LOGGING
 
 
 logging.config.dictConfig(LOGGING)
 
-menu = [{"title": "О сайте", "url_name": "/about"},
-        {"title": "Добавить задачу", "url_name": "/new-task"},
-        {"title": "Список задач по категориям", "url_name": "/tasks/all"},
-        {"title": "Войти", "url_name": "/login"},
-        {"title": "Выйти", "url_name": "/logout"}]
+
 status = {"создана": "Активные задачи", "выполнена": "Выполненые задачи",
           "отклонена": "Отклоненные задачи", "all": "Все задачи"}
 
 
+def get_menu(request):
+    menu = [{"title": "О сайте", "url_name": "/about"},
+            {"title": "Добавить задачу", "url_name": "/new-task"},
+            {"title": "Список задач по категориям", "url_name": "/tasks/all"},
+            {"title": "Войти", "url_name": "/login"},
+            {"title": "Выйти", "url_name": "/logout"},
+            {"title": request.user, "url_name": "#"}]
+    return menu
+
+
 def index(request):
-    return render(request, "tasks/index.html", {"menu": menu, "title": "Главная страница"})
+    return render(request, "tasks/index.html", {"menu": get_menu(request), "title": "Главная страница"})
 
 
 @login_required(login_url="/about/")
@@ -38,7 +44,7 @@ def tasks(request, category):
     tasks = get_tasks(request, category)
     context = {
         "tasks": tasks,
-        "menu": menu,
+        "menu": get_menu(request),
         "title": status[category]
     }
     return render(request, "tasks/tasks.html", context=context)
@@ -53,7 +59,6 @@ def edit_task(request, task_id):
         if not check_user_in_creator_executer(request, task_id):
             return HttpResponseNotFound(f"<h1>У пользователя: {request.user} нет прав для редактирования этой задачи</h1>")
         if form.is_valid():
-            Task.creator = Task.objects.get(pk=task_id).creator
             form.save()
             logging.info(f"{request.user} made task")
             return redirect("tasks")
@@ -65,9 +70,10 @@ def edit_task(request, task_id):
             username = task.creator.user.username
         elif isinstance(task.creator, UserClass):
             username = task.creator.username
-    return render(request, "tasks/edit_task.html", {"form": form, "menu": menu, "title": "Изменение задачи",
-                                                   "created": task.time_created,
-                                                   "updated": task.time_updated, "creator": username,
+    return render(request, "tasks/edit_task.html", {"form": form, "menu": get_menu(request),
+                                                    "title": "Изменение задачи",
+                                                    "created": task.time_created,
+                                                    "updated": task.time_updated, "creator": username,
                                                     "task_link": task_link})
 
 
@@ -79,15 +85,19 @@ def new_task(request):
         form = AddTaskForm(request.POST, current_user=current_user)
         if form.is_valid():
             form.save()
+            task = Task.objects.filter(executor=form.cleaned_data["executor"]).filter(
+                status="создана").order_by("-time_updated")[0]
+            send_note(form.cleaned_data["title"], form.cleaned_data["executor"], task)
             logging.info(f"{current_user} made task")
             return redirect("tasks")
     else:
         form = AddTaskForm(current_user=current_user)
-    return render(request, "tasks/new_task.html", {"form": form, "menu": menu, "title": "Добавление задачи"})
+    return render(request, "tasks/new_task.html", {"form": form, "menu": get_menu(request),
+                                                   "title": "Добавление задачи"})
 
 
 def about(request):
-    return render(request, "tasks/about.html", {"menu": menu, "title": "О сайте"})
+    return render(request, "tasks/about.html", {"menu": get_menu(request), "title": "О сайте"})
 
 
 def pageNotFound(request, exception):

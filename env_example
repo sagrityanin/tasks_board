@@ -3,13 +3,23 @@ TAG="1.0"
 # Postgres
 POSTGRES_DB="tasks"
 POSTGRES_USER="app"
-POSTGRES_PASSWORD="123qwe"
+POSTGRES_PASSWORD="password"
 POSTGRES_HOST = "task_db"
 POSTGRES_PORT = 5432
 
 
 #Django
-DJANGO_SECRET_KEY = "django_key"
+DJANGO_SECRET_KEY = "django-insecure"
 DJANGO_DEBUG = True
 ALLOWED_HOSTS = "task.info66.ru"
-CSRF_TRUSTED_ORIGINS = "http://task.info66.ru:8080"
+CSRF_TRUSTED_ORIGINS = "https://task.info66.ru:4443"
+URL = "https://task.info66.ru:4443"
+
+#Redis
+CELERY_REDIS_HOST="celery-redis"
+CELERY_REDIS_PORT=6379
+CELERY_REDIS_PASSWORD="sDf8ad60d"
+CELERY_REDIS_DB=1
+
+#Celery worker
+TELEGRAMM_TOKEN = "telegram token"
