@@ -11,7 +11,7 @@ import logging
 from .models import *
 from .forms import AddTaskForm, EditTaskForm
 from tasks.service.user import check_user_in_creator_executer
-from tasks.service.task import get_tasks
+from tasks.service.task import get_tasks, send_note
 from tasks.service.logging import LOGGING
 
 
@@ -59,7 +59,6 @@ def edit_task(request, task_id):
         if not check_user_in_creator_executer(request, task_id):
             return HttpResponseNotFound(f"<h1>У пользователя: {request.user} нет прав для редактирования этой задачи</h1>")
         if form.is_valid():
-            Task.creator = Task.objects.get(pk=task_id).creator
             form.save()
             logging.info(f"{request.user} made task")
             return redirect("tasks")
@@ -85,7 +84,9 @@ def new_task(request):
     if request.method == "POST":
         form = AddTaskForm(request.POST, current_user=current_user)
         if form.is_valid():
+
             form.save()
+            send_note(form.cleaned_data["title"], form.cleaned_data["executor"])
             logging.info(f"{current_user} made task")
             return redirect("tasks")
     else:

@@ -10,5 +10,8 @@ def get_tasks(request, category):
     else:
         tasks = Task.objects.filter(Q(creator=request.user.person) | Q(executor=request.user.person) |
                                     Q(is_visible=True)).filter(status=category).order_by("-time_updated")
-
     return tasks
+
+
+def send_note(title, executor):
+    print(title, executor.user.username)
