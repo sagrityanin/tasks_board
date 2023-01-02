@@ -1,9 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-# from captcha.fields import CaptchaField
-from django.utils.translation import gettext_lazy as _
 
 from .models import Task, Person
 
@@ -15,11 +11,10 @@ class AddTaskForm(forms.ModelForm):
         self.fields["executor"] = forms.ModelChoiceField(label="Назначен",
                                                          queryset=Person.objects.filter(is_executer=True))
         self.fields["creator"] = forms.ModelChoiceField(label="Задача создана",
-            initial=Person.objects.get(user=current_user),
-            queryset=Person.objects.filter(user=current_user))
+                                                        initial=Person.objects.get(user=current_user),
+                                                        queryset=Person.objects.filter(user=current_user))
         if "instance" in kwargs and kwargs["instance"].creator:
             self.fields["creator"].disabled = True
-
 
     class Meta:
         model = Task

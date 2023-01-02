@@ -4,21 +4,18 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User as UserClass
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.http import HttpResponseNotFound
 from django.shortcuts import render, redirect
-from django import forms
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
 from django.views.generic import ListView
-from django.contrib import messages
 from django.db.models import Q
 import logging
 
-from .models import *
+from .models import Task, Person
 from .forms import AddTaskForm, EditTaskForm
 from tasks.service.user import check_user_in_creator_executer
 from tasks.service.menu_make import get_menu, get_sidebar
-from tasks.service.task import get_tasks, send_note
+from tasks.service.task import send_note
 from tasks.service.logging import LOGGING
 
 logging.config.dictConfig(LOGGING)
@@ -50,12 +47,12 @@ class Tasks(LoginRequiredMixin, ListView):
     def get_queryset(self):
         print("Tasks")
         if self.kwargs["category"] == "all":
-            tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(executor=self.request.user.person) |
-                                        Q(is_visible=True)).order_by("-time_updated")
+            tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(
+                executor=self.request.user.person) | Q(is_visible=True)).order_by("-time_updated")
         else:
-            tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(executor=self.request.user.person) |
-                                        Q(is_visible=True)).filter(status=self.kwargs["category"]
-                                                                   ).order_by("-time_updated")
+            tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(
+                executor=self.request.user.person) | Q(is_visible=True)).filter(status=self.kwargs["category"]
+                                                                                ).order_by("-time_updated")
         return tasks
 
 
@@ -79,11 +76,9 @@ class UserTasks(LoginRequiredMixin, ListView):
     def get_queryset(self):
         print(self.request.user.person.id)
         print(type(self.request.user.person.id))
-        tasks = Task.objects.filter(Q(creator=self.request.user.person.id) |
-                                    Q(executor=self.request.user.person.id)).order_by("-time_updated")
+        tasks = Task.objects.filter(Q(creator=self.request.user.person.id) | Q(
+            executor=self.request.user.person.id)).order_by("-time_updated")
         return tasks
-
-
 
 
 @login_required(login_url="/login/")
