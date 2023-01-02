@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-01 13:42+0500\n"
+"POT-Creation-Date: 2023-01-02 17:30+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,13 +56,13 @@ msgstr "Статус"
 #, fuzzy
 #| msgid "created"
 msgid "creator"
-msgstr "создана"
+msgstr "создатель"
 
 #: tasks/models.py:38
 #, fuzzy
 #| msgid "executed"
 msgid "executor"
-msgstr "назначена"
+msgstr "исполнитель"
 
 #: tasks/models.py:44
 msgid "Task"
@@ -99,6 +99,11 @@ msgstr "Сотрудник"
 #: tasks/models.py:69
 msgid "Users"
 msgstr "Сотрудники"
+
+#: tasks/templates/tasks/tasks_by_page.html:18
+#, python-format
+msgid " %(t.status)s"
+msgstr ""
 
 #~ msgid "name"
 #~ msgstr "Имя"

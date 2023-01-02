@@ -25,7 +25,8 @@ status = {"создана": "Активные задачи", "выполнена
 
 
 def index(request):
-    return render(request, "tasks/index.html", {"menu": get_menu(request), "title": "Главная страница"})
+    return render(request, "tasks/index.html", {"menu": get_menu(request), "title": "Главная страница",
+                                                "sidebar": get_sidebar(request)})
 
 
 class Tasks(LoginRequiredMixin, ListView):

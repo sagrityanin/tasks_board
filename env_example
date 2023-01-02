@@ -14,6 +14,7 @@ DJANGO_DEBUG = True
 ALLOWED_HOSTS = "task.info66.ru"
 CSRF_TRUSTED_ORIGINS = "https://task.info66.ru:4443"
 URL = "https://task.info66.ru:4443"
+TASKS_ON_PAGE_COUNT = 10
 
 #Redis
 CELERY_REDIS_HOST="celery-redis"

@@ -25,7 +25,7 @@ class UUINMixin(models.Model):
 class Status(models.TextChoices):
     CREATED = "создана", _("created")
     EXECUTED = "выполнена", _("executed")
-    DEPRECATED = "отклонена", _("deprecated")
+    DEPRECATED = "отменена", _("deprecated")
 
 
 class Task(TimeStampMixin, UUINMixin):
@@ -39,7 +39,7 @@ class Task(TimeStampMixin, UUINMixin):
                                  related_name="executor")
 
     class Meta:
-        db_table = '"tasks"."task"'
+        db_table = '"task"."task"'
         indexes = [models.Index(fields=["status", "creator_id", "executor_id"])]
         verbose_name = _("Task")
         verbose_name_plural = _("Tasks")
@@ -64,7 +64,7 @@ class Person(TimeStampMixin, UUINMixin):
     telegramm_id = models.CharField(verbose_name=_("telegram_id"), max_length=255, blank=True)
 
     class Meta:
-        db_table = '"tasks"."person"'
+        db_table = '"task"."person"'
         verbose_name = _("User")
         verbose_name_plural = _("Users")
 

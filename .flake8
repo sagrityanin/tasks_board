@@ -1,0 +1,15 @@
+[flake8]
+ignore = D203
+exclude =
+    .git
+    __pycache__
+    tests/venv/*
+    ./django/mysite/tasks/migrations/*
+
+max-line-length = 121
+
+
+per-file-ignores =
+
+django/mysite/tasks/views.py:W503
+./django/mysite/tasks/views.py:W503
