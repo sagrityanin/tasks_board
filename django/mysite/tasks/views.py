@@ -1,12 +1,14 @@
 import os
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User as UserClass
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
 from django import forms
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 from django.contrib import messages
 from django.db.models import Q
@@ -15,6 +17,7 @@ import logging
 from .models import *
 from .forms import AddTaskForm, EditTaskForm
 from tasks.service.user import check_user_in_creator_executer
+from tasks.service.menu_make import get_menu, get_sidebar
 from tasks.service.task import get_tasks, send_note
 from tasks.service.logging import LOGGING
 
@@ -24,19 +27,11 @@ status = {"создана": "Активные задачи", "выполнена
           "отклонена": "Отклоненные задачи", "all": "Все задачи"}
 
 
-def get_menu(request):
-    menu = [{"title": "О сайте", "url_name": "/about"},
-            {"title": "Добавить задачу", "url_name": "/new-task"},
-            {"title": "Выйти", "url_name": "/logout"},
-            {"title": request.user, "url_name": "#"}]
-    return menu
-
-
 def index(request):
     return render(request, "tasks/index.html", {"menu": get_menu(request), "title": "Главная страница"})
 
 
-class Tasks(ListView):
+class Tasks(LoginRequiredMixin, ListView):
     allow_empty = True
     paginate_by = int(os.getenv("TASKS_ON_PAGE_COUNT"))
     model = Task
@@ -47,11 +42,13 @@ class Tasks(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Список задач"
-        context["category"] = self.kwargs["category"]
+        context["page_url"] = "/tasks/" + self.kwargs["category"]
         context["menu"] = get_menu(self.request)
+        context["sidebar"] = get_sidebar(self.request)
         return context
 
     def get_queryset(self):
+        print("Tasks")
         if self.kwargs["category"] == "all":
             tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(executor=self.request.user.person) |
                                         Q(is_visible=True)).order_by("-time_updated")
@@ -62,28 +59,31 @@ class Tasks(ListView):
         return tasks
 
 
+class UserTasks(LoginRequiredMixin, ListView):
+    allow_empty = True
+    paginate_by = int(os.getenv("TASKS_ON_PAGE_COUNT"))
+    model = Task
+    http_method_names = ["get"]
+    template_name = "tasks/tasks_by_page.html"
+    context_object_name = "task_list"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Список задач пользователя {self.request.user.username}"
+        context["user"] = self.request.user
+        context["page_url"] = "/usertasks"
+        context["menu"] = get_menu(self.request)
+        context["sidebar"] = get_sidebar(self.request)
+        return context
+
+    def get_queryset(self):
+        print(self.request.user.person.id)
+        print(type(self.request.user.person.id))
+        tasks = Task.objects.filter(Q(creator=self.request.user.person.id) |
+                                    Q(executor=self.request.user.person.id)).order_by("-time_updated")
+        return tasks
 
 
-
-
-@login_required(login_url="/login/")
-def tasks(request, category):
-    page_number = int(request.GET.get('page', '1'))
-    if category not in status and category != "all":
-        return HttpResponse("Заданная категория задач отсутствует")
-    tasks, task_count, page_count = get_tasks(request, category, page_number)
-    menu = get_menu(request)
-    context = {
-        "task_count": task_count,
-        "page_count": page_count,
-        "tasks": tasks,
-        "menu": menu,
-        "title": status[category]
-    }
-    print(tasks)
-    if tasks is False:
-        return HttpResponseNotFound("<h1>Запрошена несуществующая страница</h1>")
-    return render(request, "tasks/tasks.html", context=context)
 
 
 @login_required(login_url="/login/")
@@ -111,7 +111,7 @@ def edit_task(request, task_id):
                                                     "title": "Изменение задачи",
                                                     "created": task.time_created,
                                                     "updated": task.time_updated, "creator": username,
-                                                    "task_link": task_link})
+                                                    "task_link": task_link, "sidebar": get_sidebar(request)})
 
 
 @login_required(login_url="/login/")
@@ -130,7 +130,8 @@ def new_task(request):
     else:
         form = AddTaskForm(current_user=current_user)
     return render(request, "tasks/new_task.html", {"form": form, "menu": get_menu(request),
-                                                   "title": "Добавление задачи"})
+                                                   "title": "Добавление задачи",
+                                                   "sidebar": get_sidebar(request)})
 
 
 def about(request):

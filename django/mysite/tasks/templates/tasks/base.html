@@ -35,10 +35,13 @@
 <!-- Sidebar слева -->
 	<td valign="top" class="left-chapters">
 	<ul id="leftchapters">
-		<li><a href="/tasks/all/">Все задачи</a></li>
-		<li><a href="/tasks/создана/">Активные</a></li>
-		<li><a href="/tasks/выполнена/">Выполненные</a></li>
-		<li><a href="/tasks/отклонена/">Отклоненные</a></li>
+		{% for line in sidebar %}
+		<li><a href="/{{line.url}}">{{line.category}}</a></li>
+<!--		<li><a href="/tasks/all/">Все задачи</a></li>-->
+<!--		<li><a href="/tasks/создана/">Активные</a></li>-->
+<!--		<li><a href="/tasks/выполнена/">Выполненные</a></li>-->
+<!--		<li><a href="/tasks/отклонена/">Отклоненные</a></li>-->
+		{% endfor %}
 		<li class="share">
 		</li>
 	</ul>
