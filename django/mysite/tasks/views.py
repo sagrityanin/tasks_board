@@ -17,7 +17,7 @@ from .models import Task, Person
 from .forms import AddTaskForm, EditTaskForm, LoginUserForm
 from tasks.service.user import check_user_in_creator_executer
 from tasks.service.menu_make import get_menu, get_sidebar
-from tasks.service.task import send_note, get_tasks
+from tasks.service.task import send_note, get_tasks, ListTasks
 from tasks.service.logging import LOGGING
 
 logging.config.dictConfig(LOGGING)
@@ -50,20 +50,11 @@ def index(request):
     return render(request, "tasks/index.html", context=context)
 
 
-class Tasks(LoginRequiredMixin, ListView):
-    allow_empty = True
-    paginate_by = int(os.getenv("TASKS_ON_PAGE_COUNT"))
-    model = Task
-    http_method_names = ["get"]
-    template_name = "tasks/tasks_by_page.html"
-    context_object_name = "task_list"
-
+class Tasks(ListTasks):
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = self.get_context()
         context["title"] = "Список задач"
         context["page_url"] = "/tasks/" + self.kwargs["category"]
-        context["menu"] = get_menu(self.request)
-        context["sidebar"] = get_sidebar(self.request)
         return context
 
     def get_queryset(self):
@@ -77,26 +68,15 @@ class Tasks(LoginRequiredMixin, ListView):
         return tasks
 
 
-class UserTasks(LoginRequiredMixin, ListView):
-    allow_empty = True
-    paginate_by = int(os.getenv("TASKS_ON_PAGE_COUNT"))
-    model = Task
-    http_method_names = ["get"]
-    template_name = "tasks/tasks_by_page.html"
-    context_object_name = "task_list"
-
+class UserTasks(ListTasks):
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = self.get_context()
         context["title"] = f"Список задач пользователя {self.request.user.username}"
         context["user"] = self.request.user
         context["page_url"] = "/usertasks"
-        context["menu"] = get_menu(self.request)
-        context["sidebar"] = get_sidebar(self.request)
         return context
 
     def get_queryset(self):
-        print(self.request.user.person.id)
-        print(type(self.request.user.person.id))
         tasks = Task.objects.filter(Q(creator=self.request.user.person.id) | Q(
             executor=self.request.user.person.id)).order_by("-time_updated")
         return tasks

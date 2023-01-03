@@ -1,8 +1,12 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.views.generic import ListView
+
 import logging
 import os
 
 from tasks.models import Task
+from tasks.service.menu_make import get_menu, get_sidebar
 from .celery_producer import send_telegram
 
 
@@ -25,3 +29,18 @@ def send_note(title, executor, task):
 
     else:
         logging.info(f"Nowhere to send note for {executor.user.username}")
+
+
+class ListTasks(LoginRequiredMixin, ListView):
+    allow_empty = True
+    paginate_by = int(os.getenv("TASKS_ON_PAGE_COUNT"))
+    model = Task
+    http_method_names = ["get"]
+    template_name = "tasks/tasks_by_page.html"
+    context_object_name = "task_list"
+
+    def get_context(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["menu"] = get_menu(self.request)
+        context["sidebar"] = get_sidebar(self.request)
+        return context
