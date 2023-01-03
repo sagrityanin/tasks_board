@@ -16,6 +16,7 @@ def send_telegram_message(telegram_id: str, message: str) -> bool:
             "text": message
         })
         logging.info(r.content)
+        logging.info(f"Send telegram message {message} to {telegram_id}")
         return True
 
 
