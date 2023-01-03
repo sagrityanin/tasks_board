@@ -31,12 +31,6 @@ class AddTaskForm(forms.ModelForm):
 
         }
 
-    def clean_title(self):
-        title = self.cleaned_data["title"]
-        if len(title) > 200:
-            raise ValidationError("Длина превышает 200 символов")
-        return title
-
 
 class EditTaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -54,9 +48,3 @@ class EditTaskForm(forms.ModelForm):
             "title": forms.TextInput(attrs={"class": "form-input"}),
             "note": forms.Textarea(attrs={"cols": 60, "rows": 10}),
         }
-
-    def clean_title(self):
-        title = self.cleaned_data["title"]
-        if len(title) > 200:
-            raise ValidationError("Длина превышает 200 символов")
-        return title

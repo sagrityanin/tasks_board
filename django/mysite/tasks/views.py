@@ -17,7 +17,7 @@ from .models import Task, Person
 from .forms import AddTaskForm, EditTaskForm, LoginUserForm
 from tasks.service.user import check_user_in_creator_executer
 from tasks.service.menu_make import get_menu, get_sidebar
-from tasks.service.task import send_note
+from tasks.service.task import send_note, get_tasks
 from tasks.service.logging import LOGGING
 
 logging.config.dictConfig(LOGGING)
@@ -67,7 +67,6 @@ class Tasks(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        print("Tasks")
         if self.kwargs["category"] == "all":
             tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(
                 executor=self.request.user.person) | Q(is_visible=True)).order_by("-time_updated")
@@ -159,3 +158,20 @@ def about(request):
 
 def pageNotFound(request, exception):
     return HttpResponseNotFound("<h1>Страница не найдена</h1>")
+
+@login_required(login_url="/about/")
+def old_tasks(request, category):
+
+    if category not in status and category != "all":
+        return HttpResponse("Заданная категория задач отсутствует")
+    tasks = get_tasks(request, category)
+    print(tasks[0])
+    print(tasks[0].status.maketrans)
+    print(tasks[0].status.translate)
+    print(dir(tasks[0].status.translate))
+    context = {
+        "tasks": tasks,
+        "menu": get_menu(request),
+        "title": status[category]
+    }
+    return render(request, "tasks/tasks.html", context=context)
