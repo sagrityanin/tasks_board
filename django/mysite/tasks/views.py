@@ -45,9 +45,9 @@ def auth_view(request):
                                                        "sidebar": get_sidebar(request)})
 
 def index(request):
-    # return HttpResponse("<h1>Страница которая главная </h1>")
-    return render(request, "tasks/index.html", {"menu": get_menu(request), "title": "Главная страница",
-                                                "sidebar": get_sidebar(request)})
+    context = {"menu": get_menu(request), "title": "Главная страница",
+                                                "sidebar": get_sidebar(request)}
+    return render(request, "tasks/index.html", context=context)
 
 
 class Tasks(LoginRequiredMixin, ListView):
@@ -115,7 +115,10 @@ def edit_task(request, task_id):
         if form.is_valid():
             form.save()
             logging.info(f"{request.user} made task")
-            return redirect("tasks")
+            context = {"menu": get_menu(request), "title": "Главная страница",
+                       "sidebar": get_sidebar(request), "executor": form.cleaned_data["executor"],
+                       "task": form.cleaned_data["title"], "action": "изменена"}
+            return render(request, "tasks/index.html", context=context)
     else:
         task = get_object_or_404(Task, pk=task_id)
         form = EditTaskForm(instance=task)
@@ -144,7 +147,10 @@ def new_task(request):
                 status="создана").order_by("-time_updated")[0]
             send_note(form.cleaned_data["title"], form.cleaned_data["executor"], task)
             logging.info(f"{current_user} made task")
-            return redirect("tasks")
+            context = {"menu": get_menu(request), "title": "Главная страница",
+                       "sidebar": get_sidebar(request), "executor": form.cleaned_data["executor"],
+                       "task": form.cleaned_data["title"], "action": "создана"}
+            return render(request, "tasks/index.html", context=context)
     else:
         form = AddTaskForm(current_user=current_user)
     return render(request, "tasks/new_task.html", {"form": form, "menu": get_menu(request),

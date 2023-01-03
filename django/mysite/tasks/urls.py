@@ -1,7 +1,7 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from tasks.views import index, new_task, about, edit_task, Tasks, UserTasks, auth_view, old_tasks
+from tasks.views import index, new_task, about, edit_task, Tasks, UserTasks, auth_view
 
 urlpatterns = [
     path("", index, name="tasks"),

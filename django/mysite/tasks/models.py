@@ -23,9 +23,9 @@ class UUINMixin(models.Model):
 
 
 class Status(models.TextChoices):
-    CREATED = "создана", _("created")
-    EXECUTED = "выполнена", _("executed")
-    DEPRECATED = "отменена", _("deprecated")
+    СОЗДАН = "создана"
+    ВЫПОЛНЕН = "выполнена"
+    ОТМЕНЕН = "отменена"
 
 
 class Task(TimeStampMixin, UUINMixin):
