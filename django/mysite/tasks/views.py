@@ -3,16 +3,18 @@ import os
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User as UserClass
+from django.contrib import auth
 from django.db import transaction
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 from django.db.models import Q
+from django_ratelimit.decorators import ratelimit
 import logging
 
 from .models import Task, Person
-from .forms import AddTaskForm, EditTaskForm
+from .forms import AddTaskForm, EditTaskForm, LoginUserForm
 from tasks.service.user import check_user_in_creator_executer
 from tasks.service.menu_make import get_menu, get_sidebar
 from tasks.service.task import send_note
@@ -24,7 +26,26 @@ status = {"создана": "Активные задачи", "выполнена
           "отклонена": "Отклоненные задачи", "all": "Все задачи"}
 
 
+@ratelimit(key="post:username", method=ratelimit.ALL, rate="3/m")
+def auth_view(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = auth.authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                auth.login(request, user)
+                return render(request, "tasks/index.html", {"menu": get_menu(request), "title": "Главная страница",
+                                                            "sidebar": get_sidebar(request)})
+        else:
+            return HttpResponse("<h2>Invalid username or password</h2>")
+    else:
+        form = LoginUserForm()
+        return render(request, "tasks/login.html", {"form": form, "menu": get_menu(request),
+                                                       "sidebar": get_sidebar(request)})
+
 def index(request):
+    # return HttpResponse("<h1>Страница которая главная </h1>")
     return render(request, "tasks/index.html", {"menu": get_menu(request), "title": "Главная страница",
                                                 "sidebar": get_sidebar(request)})
 
@@ -82,6 +103,7 @@ class UserTasks(LoginRequiredMixin, ListView):
         return tasks
 
 
+@ratelimit(key='post:username', method=ratelimit.ALL, rate='100/h')
 @login_required(login_url="/login/")
 @transaction.atomic
 def edit_task(request, task_id):
@@ -110,6 +132,7 @@ def edit_task(request, task_id):
                                                     "task_link": task_link, "sidebar": get_sidebar(request)})
 
 
+@ratelimit(key='post:username', method=ratelimit.ALL, rate='10/h')
 @login_required(login_url="/login/")
 @transaction.atomic
 def new_task(request):
