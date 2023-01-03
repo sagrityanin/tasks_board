@@ -25,13 +25,19 @@ services:
       dockerfile: Dockerfile
     image: django:${TAG}
     container_name: task_app
+    volumes:
+      - ./django/mysite:/home/app
+      - ./django/celery/proj:/home/app/proj
     environment:
       - THREADS=without
     expose:
       - 8000
+    ports:
+      - 8000:8000
     depends_on:
       task_db:
         condition: service_healthy
+    command: /bin/bash -c "python manage.py makemigrations; python manage.py makemigrations tasks; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
     healthcheck:
       test: curl --fail -s http://127.0.0.1:8000/ || exit 1
       interval: 20s
@@ -52,6 +58,8 @@ services:
     volumes:
       - tasks_postgres_volume:/var/lib/postgresql/data
       - ./postgres/postgres_config/set_schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    ports:
+      - 5432:5432
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U app -d tasks" ]
       start_period: 10s
@@ -71,30 +79,46 @@ services:
       REDIS_PORT: $CELERY_REDIS_PORT
 #      REDIS_PASSWORD: $CELERY_REDIS_PASSWORD
     image: redis:7.0.5
+#    depends_on:
+#      rabbitmq-manager:
+#        condition: service_healthy
     healthcheck:
       test: redis-cli -a $CELERY_REDIS_PASSWORD ping || exit 1
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 5s
+    ports:
+      - 6379:6379
     networks:
       - my-network
 
   celery_worker:
     build:
       context: ./django/celery
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_dev
     image: celery_worker:${TAG}
     container_name: celery_worker
+    volumes:
+      - ./django/celery/:/home/app
     depends_on:
       celery-redis:
         condition: service_started
+#      task_app:
+#        condition: service_healthy
+    command: /bin/bash -c "/home/app/worker.sh"
+#    healthcheck:
+#      test: curl --fail -s http://task-app:8000/ || exit 1
+#      interval: 20s
+#      timeout: 10s
+#      retries: 3
     networks:
       - my-network
     env_file: .env
 
 volumes:
   tasks_postgres_volume:
+
 
 networks:
     my-network:

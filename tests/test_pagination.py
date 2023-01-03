@@ -6,19 +6,13 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from dotenv import load_dotenv
 
-count = 100
-url = "https://task.info66.ru:4443"
+urls = ["https://task.info66.ru:4443/tasks/all/",
+        "https://task.info66.ru:4443/usertasks/"]
 url_login = "https://task.info66.ru:4443/login/"
 
 load_dotenv()
 
 
-def make_task(browser, i: int) -> None:
-    browser.find_element(By.ID, "id_title").send_keys(f"Тестовая задача {i}")
-    browser.find_element(By.ID, "id_executor").find_elements(By.TAG_NAME, "option")[1].click()
-    sleep(1)
-    browser.find_element(By.XPATH, '//button[@type="submit"]').click()
-    sleep(1)
 
 
 def login(browser) -> None:
@@ -33,12 +27,16 @@ def login(browser) -> None:
 def main(count: int) -> None:
     with webdriver.Chrome() as browser:
         login(browser)
-        for i in range(count):
-            browser.find_element(By.XPATH, "//*[contains(text(), 'Добавить задачу')]").click()
-            print(f"Создание задачи {i}")
-            sleep(1)
-            make_task(browser, i)
+        for url in urls:
+            browser.get(url)
+            for i in range(count):
+                browser.find_element(By.XPATH, "//*[contains(text(), 'next')]").click()
+                sleep(2)
+            for i in range(count):
+                browser.find_element(By.XPATH, "//*[contains(text(), 'previous')]").click()
+                sleep(2)
 
 
 if __name__ == "__main__":
-    main(int(os.getenv("COUNT")))
+    main(2)
+    print("Pagination correct")

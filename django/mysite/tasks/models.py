@@ -23,9 +23,9 @@ class UUINMixin(models.Model):
 
 
 class Status(models.TextChoices):
-    CREATED = "создана", _("created")
-    EXECUTED = "выполнена", _("executed")
-    DEPRECATED = "отклонена", _("deprecated")
+    СОЗДАН = "создана"
+    ВЫПОЛНЕН = "выполнена"
+    ОТМЕНЕН = "отменена"
 
 
 class Task(TimeStampMixin, UUINMixin):
@@ -39,7 +39,7 @@ class Task(TimeStampMixin, UUINMixin):
                                  related_name="executor")
 
     class Meta:
-        db_table = '"tasks"."task"'
+        db_table = '"task"."task"'
         indexes = [models.Index(fields=["status", "creator_id", "executor_id"])]
         verbose_name = _("Task")
         verbose_name_plural = _("Tasks")
@@ -60,11 +60,11 @@ class Person(TimeStampMixin, UUINMixin):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_executer = models.BooleanField(verbose_name=_("is_executer"), null=False, default=False, db_index=True)
     note_chanal = models.TextField(verbose_name=_("NoteChanal"), choices=NoteChanal.choices,
-        null=True, default="telegramm")
+                                   null=True, default="telegramm")
     telegramm_id = models.CharField(verbose_name=_("telegram_id"), max_length=255, blank=True)
 
     class Meta:
-        db_table = '"tasks"."person"'
+        db_table = '"task"."person"'
         verbose_name = _("User")
         verbose_name_plural = _("Users")
 
@@ -79,4 +79,3 @@ class Person(TimeStampMixin, UUINMixin):
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
         instance.person.save()
-

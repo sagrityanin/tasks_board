@@ -1,7 +1,11 @@
 {% extends 'tasks/base.html' %}
- 
+
+{% load i18n %}
 {% block content %}
 {# .... **Normal content list, maybe a table** .... #}
+{% if user %}
+<h4>Список задач пользователя {{user}}</h4>
+{% endif %}
 {% if task_list %}
     <table id="tasks">
         {% for t in task_list %}
@@ -10,7 +14,7 @@
 
                     <p>Создан {{t.creator}}</p>
                     <p>Создан для {{t.executor}}</p>
-                    <p>Статус задачи -  {{t.status}}</p>
+                    <p>Статус задачи - {{ t.status}}</p>
                  </td>
                  <td style="width:200px"></td>
                  <td><div class="clear"></div>
@@ -24,13 +28,13 @@
         <div class="pagination">
             <span class="page-links">
                 {% if page_obj.has_previous %}
-                    <a href="/tasks/{{category}}?page={{ page_obj.previous_page_number }}">previous</a>
+                    <a href="{{page_url}}?page={{ page_obj.previous_page_number }}">previous</a>
                 {% endif %}
                 <span class="page-current">
                     Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
                 </span>
                 {% if page_obj.has_next %}
-                    <a href="/tasks/{{category}}?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="{{page_url}}?page={{ page_obj.next_page_number }}">next</a>
                 {% endif %}
             </span>
         </div>

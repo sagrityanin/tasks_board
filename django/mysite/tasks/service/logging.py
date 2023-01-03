@@ -1,4 +1,3 @@
-import logging
 
 LOGGING = {
     'version': 1,

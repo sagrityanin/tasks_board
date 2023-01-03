@@ -1,21 +1,23 @@
 import os
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User as UserClass
+from django.contrib import auth
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
-from django import forms
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
-from django.contrib import messages
 from django.db.models import Q
+from django_ratelimit.decorators import ratelimit
 import logging
 
-from .models import *
-from .forms import AddTaskForm, EditTaskForm
+from .models import Task, Person
+from .forms import AddTaskForm, EditTaskForm, LoginUserForm
 from tasks.service.user import check_user_in_creator_executer
-from tasks.service.task import get_tasks, send_note
+from tasks.service.menu_make import get_menu, get_sidebar
+from tasks.service.task import send_note, get_tasks, ListTasksMixin
 from tasks.service.logging import LOGGING
 
 logging.config.dictConfig(LOGGING)
@@ -24,68 +26,63 @@ status = {"создана": "Активные задачи", "выполнена
           "отклонена": "Отклоненные задачи", "all": "Все задачи"}
 
 
-def get_menu(request):
-    menu = [{"title": "О сайте", "url_name": "/about"},
-            {"title": "Добавить задачу", "url_name": "/new-task"},
-            {"title": "Выйти", "url_name": "/logout"},
-            {"title": request.user, "url_name": "#"}]
-    return menu
-
+@ratelimit(key="post:username", method=ratelimit.ALL, rate="3/m")
+def auth_view(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = auth.authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                auth.login(request, user)
+                return render(request, "tasks/index.html", {"menu": get_menu(request), "title": "Главная страница",
+                                                            "sidebar": get_sidebar(request)})
+        else:
+            return HttpResponse("<h2>Invalid username or password</h2>")
+    else:
+        form = LoginUserForm()
+        return render(request, "tasks/login.html", {"form": form, "menu": get_menu(request),
+                                                       "sidebar": get_sidebar(request)})
 
 def index(request):
-    return render(request, "tasks/index.html", {"menu": get_menu(request), "title": "Главная страница"})
+    context = {"menu": get_menu(request), "title": "Главная страница",
+                                                "sidebar": get_sidebar(request)}
+    return render(request, "tasks/index.html", context=context)
 
 
-class Tasks(ListView):
-    allow_empty = True
-    paginate_by = int(os.getenv("TASKS_ON_PAGE_COUNT"))
-    model = Task
-    http_method_names = ["get"]
-    template_name = "tasks/tasks_by_page.html"
-    context_object_name = "task_list"
-
+class Tasks(ListTasksMixin):
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = self.get_context()
         context["title"] = "Список задач"
-        context["category"] = self.kwargs["category"]
-        context["menu"] = get_menu(self.request)
+        context["page_url"] = "/tasks/" + self.kwargs["category"]
         return context
 
     def get_queryset(self):
         if self.kwargs["category"] == "all":
-            tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(executor=self.request.user.person) |
-                                        Q(is_visible=True)).order_by("-time_updated")
+            tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(
+                executor=self.request.user.person) | Q(is_visible=True)).order_by("-time_updated")
         else:
-            tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(executor=self.request.user.person) |
-                                        Q(is_visible=True)).filter(status=self.kwargs["category"]
-                                                                   ).order_by("-time_updated")
+            tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(
+                executor=self.request.user.person) | Q(is_visible=True)).filter(status=self.kwargs["category"]
+                                                                                ).order_by("-time_updated")
         return tasks
 
 
+class UserTasks(ListTasksMixin):
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = self.get_context()
+        context["title"] = f"Список задач пользователя {self.request.user.username}"
+        context["user"] = self.request.user
+        context["page_url"] = "/usertasks"
+        return context
+
+    def get_queryset(self):
+        tasks = Task.objects.filter(Q(creator=self.request.user.person.id) | Q(
+            executor=self.request.user.person.id)).order_by("-time_updated")
+        return tasks
 
 
-
-
-@login_required(login_url="/login/")
-def tasks(request, category):
-    page_number = int(request.GET.get('page', '1'))
-    if category not in status and category != "all":
-        return HttpResponse("Заданная категория задач отсутствует")
-    tasks, task_count, page_count = get_tasks(request, category, page_number)
-    menu = get_menu(request)
-    context = {
-        "task_count": task_count,
-        "page_count": page_count,
-        "tasks": tasks,
-        "menu": menu,
-        "title": status[category]
-    }
-    print(tasks)
-    if tasks is False:
-        return HttpResponseNotFound("<h1>Запрошена несуществующая страница</h1>")
-    return render(request, "tasks/tasks.html", context=context)
-
-
+@ratelimit(key='post:username', method=ratelimit.ALL, rate='100/h')
 @login_required(login_url="/login/")
 @transaction.atomic
 def edit_task(request, task_id):
@@ -98,7 +95,10 @@ def edit_task(request, task_id):
         if form.is_valid():
             form.save()
             logging.info(f"{request.user} made task")
-            return redirect("tasks")
+            context = {"menu": get_menu(request), "title": "Главная страница",
+                       "sidebar": get_sidebar(request), "executor": form.cleaned_data["executor"],
+                       "task": form.cleaned_data["title"], "action": "изменена"}
+            return render(request, "tasks/index.html", context=context)
     else:
         task = get_object_or_404(Task, pk=task_id)
         form = EditTaskForm(instance=task)
@@ -111,9 +111,10 @@ def edit_task(request, task_id):
                                                     "title": "Изменение задачи",
                                                     "created": task.time_created,
                                                     "updated": task.time_updated, "creator": username,
-                                                    "task_link": task_link})
+                                                    "task_link": task_link, "sidebar": get_sidebar(request)})
 
 
+@ratelimit(key='post:username', method=ratelimit.ALL, rate='10/h')
 @login_required(login_url="/login/")
 @transaction.atomic
 def new_task(request):
@@ -126,11 +127,15 @@ def new_task(request):
                 status="создана").order_by("-time_updated")[0]
             send_note(form.cleaned_data["title"], form.cleaned_data["executor"], task)
             logging.info(f"{current_user} made task")
-            return redirect("tasks")
+            context = {"menu": get_menu(request), "title": "Главная страница",
+                       "sidebar": get_sidebar(request), "executor": form.cleaned_data["executor"],
+                       "task": form.cleaned_data["title"], "action": "создана"}
+            return render(request, "tasks/index.html", context=context)
     else:
         form = AddTaskForm(current_user=current_user)
     return render(request, "tasks/new_task.html", {"form": form, "menu": get_menu(request),
-                                                   "title": "Добавление задачи"})
+                                                   "title": "Добавление задачи",
+                                                   "sidebar": get_sidebar(request)})
 
 
 def about(request):
