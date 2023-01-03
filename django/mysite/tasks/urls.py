@@ -14,5 +14,4 @@ urlpatterns = [
     path("tasks/<str:category>/", Tasks.as_view(), name="tasks_by_category"),
     path("usertasks/", UserTasks.as_view(), name="usertasks"),
     path("login/", auth_view, name="login"),
-    path("old_tasks/<str:category>/", old_tasks, name="old_task")
 ]

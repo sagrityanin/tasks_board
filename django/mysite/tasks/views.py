@@ -158,20 +158,3 @@ def about(request):
 
 def pageNotFound(request, exception):
     return HttpResponseNotFound("<h1>Страница не найдена</h1>")
-
-@login_required(login_url="/about/")
-def old_tasks(request, category):
-
-    if category not in status and category != "all":
-        return HttpResponse("Заданная категория задач отсутствует")
-    tasks = get_tasks(request, category)
-    print(tasks[0])
-    print(tasks[0].status.maketrans)
-    print(tasks[0].status.translate)
-    print(dir(tasks[0].status.translate))
-    context = {
-        "tasks": tasks,
-        "menu": get_menu(request),
-        "title": status[category]
-    }
-    return render(request, "tasks/tasks.html", context=context)
