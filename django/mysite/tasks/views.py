@@ -17,7 +17,7 @@ from .models import Task, Person
 from .forms import AddTaskForm, EditTaskForm, LoginUserForm
 from tasks.service.user import check_user_in_creator_executer
 from tasks.service.menu_make import get_menu, get_sidebar
-from tasks.service.task import send_note, get_tasks, ListTasks
+from tasks.service.task import send_note, get_tasks, ListTasksMixin
 from tasks.service.logging import LOGGING
 
 logging.config.dictConfig(LOGGING)
@@ -50,7 +50,7 @@ def index(request):
     return render(request, "tasks/index.html", context=context)
 
 
-class Tasks(ListTasks):
+class Tasks(ListTasksMixin):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = self.get_context()
         context["title"] = "Список задач"
@@ -68,7 +68,7 @@ class Tasks(ListTasks):
         return tasks
 
 
-class UserTasks(ListTasks):
+class UserTasks(ListTasksMixin):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = self.get_context()
         context["title"] = f"Список задач пользователя {self.request.user.username}"

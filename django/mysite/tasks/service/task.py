@@ -31,7 +31,7 @@ def send_note(title, executor, task):
         logging.info(f"Nowhere to send note for {executor.user.username}")
 
 
-class ListTasks(LoginRequiredMixin, ListView):
+class ListTasksMixin(LoginRequiredMixin, ListView):
     allow_empty = True
     paginate_by = int(os.getenv("TASKS_ON_PAGE_COUNT"))
     model = Task
