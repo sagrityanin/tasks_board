@@ -140,3 +140,5 @@ MEDIA_URL = "/media/"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "/"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+AUTHENTICATION_BACKENDS = ('tasks.service.email_auth.EmailBackend',)

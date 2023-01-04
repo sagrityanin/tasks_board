@@ -26,12 +26,10 @@ status = {"создана": "Активные задачи", "выполнена
           "отклонена": "Отклоненные задачи", "all": "Все задачи"}
 
 
-@ratelimit(key="post:username", method=ratelimit.ALL, rate="23/m")
+@ratelimit(key="post:username", method=ratelimit.ALL, rate="3/m")
 def auth_view(request):
     if request.method == "POST":
-        email = request.POST.get("email")
-        # username = request.POST.get('username')
-        username = UserClass.objects.get(email=email).username
+        username = request.POST.get('username')
         password = request.POST.get("password")
         user = auth.authenticate(username=username, password=password)
 
