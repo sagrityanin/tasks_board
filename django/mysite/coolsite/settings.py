@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # "women.apps.WomenConfig",
     "tasks.apps.TasksConfig",
     "crispy_forms",
 ]
@@ -140,3 +139,5 @@ MEDIA_URL = "/media/"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "/"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+AUTHENTICATION_BACKENDS = ('tasks.service.email_auth.EmailBackend',)

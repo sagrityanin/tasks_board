@@ -16,7 +16,6 @@ load_dotenv()
 def make_task(browser, i: int) -> None:
     browser.find_element(By.ID, "id_title").send_keys(f"Тестовая задача {i}")
     browser.find_element(By.ID, "id_executor").find_elements(By.TAG_NAME, "option")[1].click()
-    browser.find_element(By.ID, "id_is_visible").click()
     sleep(1)
     browser.find_element(By.XPATH, '//button[@type="submit"]').click()
     sleep(1)
@@ -33,13 +32,10 @@ def login(browser) -> None:
 
 def main(count: int) -> None:
     with webdriver.Chrome() as browser:
-        login(browser)
         for i in range(count):
-            browser.find_element(By.XPATH, "//*[contains(text(), 'Добавить задачу')]").click()
-            print(f"Создание задачи {i}")
-            sleep(1)
-            make_task(browser, i)
+            login(browser)
+            browser.get("https://task.info66.ru:4443/logout/")
 
 
 if __name__ == "__main__":
-    main(int(os.getenv("COUNT")))
+    main(30)

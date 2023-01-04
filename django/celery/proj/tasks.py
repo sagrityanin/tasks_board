@@ -6,7 +6,7 @@ import os
 from .celery import app
 
 
-@app.task(max_retries=10, autoretry_for=(Exception,), retry_backoff=3600)
+@app.task(max_retries=10, autoretry_for=(Exception,), retry_backoff=10)
 def send_telegram_message(telegram_id: str, message: str) -> bool:
     with open("proj/celery.log", "a") as f:
         f.write(telegram_id + ", " + message + "\n" + str(datetime.now()))
