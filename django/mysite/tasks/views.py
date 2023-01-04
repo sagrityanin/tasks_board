@@ -26,7 +26,7 @@ status = {"создана": "Активные задачи", "выполнена
           "отклонена": "Отклоненные задачи", "all": "Все задачи"}
 
 
-@ratelimit(key="post:username", method=ratelimit.ALL, rate="3/m")
+@ratelimit(key="post:username", method=ratelimit.ALL, rate=os.getenv("LOGIN_RARELIMIT"))
 def auth_view(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -79,11 +79,11 @@ class UserTasks(ListTasksMixin):
 
     def get_queryset(self):
         tasks = Task.objects.filter(Q(creator=self.request.user.person.id) | Q(
-            executor=self.request.user.person.id)).order_by("-time_updated")
+            executor=self.request.user.person.id)).order_by("-time_updated").order_by("-status")
         return tasks
 
 
-@ratelimit(key='post:username', method=ratelimit.ALL, rate='100/h')
+@ratelimit(key='post:username', method=ratelimit.ALL, rate=os.getenv("NEW_TASK_RARELIMIT"))
 @login_required(login_url="/login/")
 @transaction.atomic
 def edit_task(request, task_id):
@@ -115,7 +115,7 @@ def edit_task(request, task_id):
                                                     "task_link": task_link, "sidebar": get_sidebar(request)})
 
 
-@ratelimit(key='post:username', method=ratelimit.ALL, rate='10/h')
+@ratelimit(key='post:username', method=ratelimit.ALL, rate=os.getenv("NEW_TASK_RARELIMIT"))
 @login_required(login_url="/login/")
 @transaction.atomic
 def new_task(request):

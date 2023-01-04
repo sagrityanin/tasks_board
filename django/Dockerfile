@@ -16,4 +16,6 @@ COPY ./celery/proj ./proj
 
 COPY ./mysite .
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+#CMD ["gunicorn", "coolsite.wsgi", "--bind 0.0.0.0:8000", "--workers 2"]
+CMD chmod +x /home/flask/enterypiont.sh
+ENTRYPOINT ["/home/app/entrypoint.sh"]
