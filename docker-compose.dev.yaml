@@ -22,7 +22,7 @@ services:
   task_app:
     build:
       context: ./django
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_dev
     image: django:${TAG}
     container_name: task_app
     volumes:
