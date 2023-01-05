@@ -10,6 +10,6 @@ else
   cd tests
   source ./venv/bin/activate
 fi
-#python3 make_tasks.py
+python3 make_tasks.py
 python3 test_pagination.py
-#python3 change_status_tasks.py
+python3 change_status_tasks.py
