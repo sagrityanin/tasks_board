@@ -16,7 +16,7 @@ import logging
 from .models import Task, Person
 from .forms import AddTaskForm, EditTaskForm, LoginUserForm
 from tasks.service.user import check_user_in_creator_executer
-from tasks.service.menu_make import get_menu, get_sidebar
+from tasks.service.menu_make import get_menu, get_sidebar, get_context
 from tasks.service.task import send_note, get_tasks, ListTasksMixin
 from tasks.service.logging import LOGGING
 
@@ -46,10 +46,12 @@ def auth_view(request):
                                                        "sidebar": get_sidebar(request)})
 
 def index(request):
-    context = {"menu": get_menu(request), "title": "Главная страница",
-                                                "sidebar": get_sidebar(request)}
+    context = get_context(request)
     return render(request, "tasks/index.html", context=context)
 
+def logout(request):
+    context = get_context(request)
+    return render(request, "tasks/logout.html", context=context)
 
 class Tasks(ListTasksMixin):
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -140,7 +142,8 @@ def new_task(request):
 
 
 def about(request):
-    return render(request, "tasks/about.html", {"menu": get_menu(request), "title": "О сайте"})
+    context = get_context(request)
+    return render(request, "tasks/about.html", context=context)
 
 
 def pageNotFound(request, exception):

@@ -30,6 +30,7 @@ services:
     expose:
       - 8000
     depends_on:
+
       task_db:
         condition: service_healthy
     healthcheck:

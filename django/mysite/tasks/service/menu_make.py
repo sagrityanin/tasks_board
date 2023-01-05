@@ -2,9 +2,13 @@
 
 def get_menu(request):
     menu = [{"title": "О сайте", "url_name": "/about"},
-            {"title": "Добавить задачу", "url_name": "/new-task"},
-            {"title": "Выйти", "url_name": "/logout"},
-            {"title": request.user, "url_name": "#"}]
+            {"title": "Добавить задачу", "url_name": "/new-task"}]
+    if str(request.user) == "AnonymousUser":
+        menu.append({"title": "Войти", "url_name": "/login"})
+        menu.append({"": "#"})
+    else:
+        menu.append({"title": "Выйти", "url_name": "/logout"})
+        menu.append({"title": request.user, "url_name": "#"})
     return menu
 
 
@@ -17,3 +21,9 @@ def get_sidebar(request):
                ]
 
     return sidebar
+
+def get_context(request):
+    context = {"menu": get_menu(request), "title": "Главная страница",
+               "sidebar": get_sidebar(request)}
+    return context
+
