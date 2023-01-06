@@ -101,3 +101,15 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 AUTHENTICATION_BACKENDS = ('tasks.service.email_auth.EmailBackend',)
 LOGOUT_REDIRECT_URL = "logout_func"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{os.getenv('REDIS_CACHE_HOST')}:{os.getenv('REDIS_CACHE_PORT')}/{os.getenv('REDIS_CACHE_DB_DEFAULT')}",
+    },
+    "cache-for-ratelimiting": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{os.getenv('REDIS_CACHE_HOST')}:{os.getenv('REDIS_CACHE_PORT')}/{os.getenv('REDIS_CACHE_DB_RARELIMIT')}",
+    }
+}
+RATELIMIT_USE_CACHE = "cache-for-ratelimiting"
