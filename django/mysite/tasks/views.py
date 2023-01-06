@@ -5,12 +5,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User as UserClass
 from django.contrib import auth
 from django.db import transaction
-from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 from django.db.models import Q
 from django_ratelimit.decorators import ratelimit
+from django_ratelimit.exceptions import Ratelimited
+
 import logging
 
 from .models import Task, Person
@@ -148,3 +150,11 @@ def about(request):
 
 def pageNotFound(request, exception):
     return HttpResponseNotFound("<h1>Страница не найдена</h1>")
+
+
+def view_handler403(request, exception=None):
+    if isinstance(exception, Ratelimited):
+        context = get_context(request)
+        context["title"] = "Доступ временно заблокирован"
+        return render(request, "tasks/403.html", context=context)
+    return HttpResponseForbidden('Sorry Forbidden')
