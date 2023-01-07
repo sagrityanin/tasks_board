@@ -47,13 +47,16 @@ def auth_view(request):
         return render(request, "tasks/login.html", {"form": form, "menu": get_menu(request),
                                                        "sidebar": get_sidebar(request)})
 
+
 def index(request):
     context = get_context(request)
     return render(request, "tasks/index.html", context=context)
 
+
 def logout(request):
     context = get_context(request)
     return render(request, "tasks/logout.html", context=context)
+
 
 class Tasks(ListTasksMixin):
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -65,11 +68,13 @@ class Tasks(ListTasksMixin):
     def get_queryset(self):
         if self.kwargs["category"] == "all":
             tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(
-                executor=self.request.user.person) | Q(is_visible=True)).order_by("-time_updated")
+                executor=self.request.user.person) | Q(is_visible=True)).select_related(
+                "creator", "executor").order_by("-time_updated")
         else:
             tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(
-                executor=self.request.user.person) | Q(is_visible=True)).filter(status=self.kwargs["category"]
-                                                                                ).order_by("-time_updated")
+                executor=self.request.user.person) | Q(
+                is_visible=True)).filter(status=self.kwargs["category"]).select_related(
+                "creator", "executor").order_by("-time_updated")
         return tasks
 
 
@@ -83,7 +88,8 @@ class UserTasks(ListTasksMixin):
 
     def get_queryset(self):
         tasks = Task.objects.filter(Q(creator=self.request.user.person.id) | Q(
-            executor=self.request.user.person.id)).order_by("-time_updated").order_by("-status")
+            executor=self.request.user.person.id)).order_by("-time_updated").select_related(
+            "creator", "executor").order_by("-status")
         return tasks
 
 
