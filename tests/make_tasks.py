@@ -15,7 +15,7 @@ load_dotenv()
 
 def make_task(browser, i: int) -> None:
     browser.find_element(By.ID, "id_title").send_keys(f"Тестовая задача {i}")
-    browser.find_element(By.ID, "id_executor").find_elements(By.TAG_NAME, "option")[1].click()
+    browser.find_element(By.ID, "id_executor").find_element(By.XPATH, "//*[contains(text(), 'andrey')]").click()
     browser.find_element(By.ID, "id_is_visible").click()
     sleep(1)
     browser.find_element(By.XPATH, '//button[@type="submit"]').click()

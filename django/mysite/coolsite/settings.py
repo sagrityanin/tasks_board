@@ -19,9 +19,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "tasks.apps.TasksConfig",
     "crispy_forms",
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -113,3 +115,12 @@ CACHES = {
     }
 }
 RATELIMIT_USE_CACHE = "cache-for-ratelimiting"
+
+if DEBUG:
+    import socket
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", ]
+else:
+    INTERNAL_IPS = [
+        "127.0.0.1",
+    ]
