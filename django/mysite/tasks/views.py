@@ -93,6 +93,21 @@ class UserTasks(ListTasksMixin):
         return tasks
 
 
+class UserActiveTasks(ListTasksMixin):
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = self.get_context()
+        context["title"] = f"Задачи пользователя {self.request.user.username} в работе"
+        context["user"] = self.request.user
+        context["page_url"] = "/user-active-tasks/"
+        return context
+
+    def get_queryset(self):
+        tasks = Task.objects.filter(executor=self.request.user.person.id).filter(
+            status="создана").order_by("-time_updated").select_related(
+            "executor").order_by("time_updated")
+        return tasks
+
+
 @ratelimit(key='post:username', method=ratelimit.ALL, rate=os.getenv("NEW_TASK_RARELIMIT"))
 @login_required(login_url="/login/")
 @transaction.atomic

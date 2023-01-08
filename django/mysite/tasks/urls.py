@@ -1,7 +1,7 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from tasks.views import index, new_task, about, edit_task, Tasks, UserTasks, auth_view, logout
+from tasks.views import index, new_task, about, edit_task, Tasks, UserTasks, auth_view, logout, UserActiveTasks
 
 urlpatterns = [
     path("", index, name="tasks"),
@@ -15,4 +15,5 @@ urlpatterns = [
     path("tasks/<str:category>/", Tasks.as_view(), name="tasks_by_category"),
     path("usertasks/", UserTasks.as_view(), name="usertasks"),
     path("login/", auth_view, name="login"),
+    path("user-active-tasks/", UserActiveTasks.as_view(), name="user_active_tasks")
 ]

@@ -17,7 +17,8 @@ def get_sidebar(request):
                {"url": "tasks/создана", "category": "Активные"},
                {"url": "tasks/выполнена", "category": "Выполненные"},
                {"url": "tasks/отклонена", "category": "Отклоненные"},
-               {"url": "usertasks", "category": "Задачи пользователя"}
+               {"url": "usertasks", "category": "Все задачи пользователя"},
+               {"url": "user-active-tasks", "category": "Задачи пользователя в работе"}
                ]
 
     return sidebar
