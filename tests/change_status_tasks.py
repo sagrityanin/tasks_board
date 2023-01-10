@@ -30,7 +30,7 @@ def main(count: int) -> None:
     with webdriver.Chrome() as browser:
         login(browser)
         for i in range(count):
-            browser.get("https://task.info66.ru:4443/tasks/%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B0/")
+            browser.get("https://task.info66.ru:4443/task-list")
             sleep(1)
             list_tasks = browser.find_elements(By.XPATH, "//*[contains(text(), 'Детали задачи')]")
             if len(list_tasks) > 0:

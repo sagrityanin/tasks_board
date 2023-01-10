@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-02 17:30+0500\n"
+"POT-Creation-Date: 2023-01-10 06:10+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,79 +18,70 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: tasks/apps.py:8 tasks/models.py:45
+#: tasks/apps.py:8 tasks/models.py:55
 msgid "Tasks"
 msgstr ""
 
-#: tasks/models.py:26
-msgid "created"
-msgstr ""
-
-#: tasks/models.py:27
-msgid "executed"
-msgstr ""
-
-#: tasks/models.py:28
-msgid "deprecated"
-msgstr ""
-
 #: tasks/models.py:32
-msgid "title"
+msgid "status_title"
 msgstr ""
 
-#: tasks/models.py:33
-msgid "note"
-msgstr ""
-
-#: tasks/models.py:34
-msgid "is_visible"
-msgstr ""
-
-#: tasks/models.py:35
+#: tasks/models.py:36 tasks/models.py:43
 msgid "Status"
 msgstr ""
 
-#: tasks/models.py:36
+#: tasks/models.py:37
+msgid "Statuses"
+msgstr ""
+
+#: tasks/models.py:40
+msgid "title"
+msgstr ""
+
+#: tasks/models.py:41
+msgid "note"
+msgstr ""
+
+#: tasks/models.py:42
+msgid "is_visible"
+msgstr ""
+
+#: tasks/models.py:46
 msgid "creator"
 msgstr ""
 
-#: tasks/models.py:38
+#: tasks/models.py:48
 msgid "executor"
 msgstr ""
 
-#: tasks/models.py:44
+#: tasks/models.py:54
 msgid "Task"
 msgstr ""
 
-#: tasks/models.py:55
+#: tasks/models.py:65
 msgid "telegramm"
 msgstr ""
 
-#: tasks/models.py:56
+#: tasks/models.py:66
 msgid "absent"
 msgstr ""
 
-#: tasks/models.py:61
+#: tasks/models.py:71
 msgid "is_executer"
 msgstr ""
 
-#: tasks/models.py:62
+#: tasks/models.py:72
 msgid "NoteChanal"
 msgstr ""
 
-#: tasks/models.py:64
+#: tasks/models.py:74
 msgid "telegram_id"
 msgstr ""
 
-#: tasks/models.py:68
+#: tasks/models.py:78
 msgid "User"
 msgstr ""
 
-#: tasks/models.py:69
+#: tasks/models.py:79
 msgid "Users"
-msgstr ""
-
-#: tasks/templates/tasks/tasks_by_page.html:18
-#, python-format
-msgid " %(t.status)s"
 msgstr ""

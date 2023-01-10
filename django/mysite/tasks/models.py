@@ -28,11 +28,29 @@ class Status(models.TextChoices):
     ОТМЕНЕН = "отменена"
 
 
+class StatusModel(TimeStampMixin, UUINMixin):
+    title = models.CharField(verbose_name=_("status_title"), max_length=64, unique=True)
+
+    class Meta:
+        db_table = '"task"."status"'
+        verbose_name = _("Status")
+        verbose_name_plural = _("Statuses")
+
+    def __str__(self):
+        return self.title
+
+    @classmethod
+    def get_default_pk(cls):
+        created_status = cls.objects.get(title="Создана")
+        print("get status", created_status)
+        return created_status.id
+
 class Task(TimeStampMixin, UUINMixin):
     title = models.CharField(verbose_name=_('title'), max_length=255)
     note = models.TextField(verbose_name=_('note'), blank=True)
     is_visible = models.BooleanField(verbose_name=_('is_visible'), default=True)
-    status = models.TextField(verbose_name=_("Status"), choices=Status.choices, null=False, default="создана")
+    status = models.ForeignKey("StatusModel", verbose_name=_("Status"), on_delete=models.CASCADE,
+                               related_name="status", default=StatusModel.get_default_pk)
     creator = models.ForeignKey("Person", verbose_name=_("creator"), on_delete=models.CASCADE,
                                 related_name="creator")
     executor = models.ForeignKey("Person", verbose_name=_('executor'), on_delete=models.CASCADE,

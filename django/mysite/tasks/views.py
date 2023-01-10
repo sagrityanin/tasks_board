@@ -5,27 +5,41 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User as UserClass
 from django.contrib import auth
 from django.db import transaction
-from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse, HttpResponseForbidden
+from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 from django.db.models import Q
+from django.views.generic.edit import FormMixin
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 
 import logging
 
-from .models import Task, Person
-from .forms import AddTaskForm, EditTaskForm, LoginUserForm
+from .models import Task, Person,  StatusModel
+from .forms import AddTaskForm, EditTaskForm, LoginUserForm, TaskListForm
 from tasks.service.user import check_user_in_creator_executer
 from tasks.service.menu_make import get_menu, get_sidebar, get_context
-from tasks.service.task import send_note, get_tasks, ListTasksMixin
+from tasks.service.task import send_note, ListTasksMixin, ListTaskMixin
 from tasks.service.logging import LOGGING
 
 logging.config.dictConfig(LOGGING)
 
 status = {"создана": "Активные задачи", "выполнена": "Выполненые задачи",
           "отклонена": "Отклоненные задачи", "all": "Все задачи"}
+
+
+class TaskList(ListTaskMixin):
+    form_class = TaskListForm
+    model = Task
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = self.get_context()
+        context["title"] = "Список задач"
+        context["page_url"] = "/task-list/"
+        return context
+
+
 
 
 @ratelimit(key="post:username", method=ratelimit.ALL, rate=os.getenv("LOGIN_RARELIMIT"))
@@ -58,26 +72,6 @@ def logout(request):
     return render(request, "tasks/logout.html", context=context)
 
 
-class Tasks(ListTasksMixin):
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = self.get_context()
-        context["title"] = "Список задач"
-        context["page_url"] = "/tasks/" + self.kwargs["category"]
-        return context
-
-    def get_queryset(self):
-        if self.kwargs["category"] == "all":
-            tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(
-                executor=self.request.user.person) | Q(is_visible=True)).select_related(
-                "creator", "executor").order_by("-time_updated")
-        else:
-            tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(
-                executor=self.request.user.person) | Q(
-                is_visible=True)).filter(status=self.kwargs["category"]).select_related(
-                "creator", "executor").order_by("-time_updated")
-        return tasks
-
-
 class UserTasks(ListTasksMixin):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = self.get_context()
@@ -103,8 +97,8 @@ class UserActiveTasks(ListTasksMixin):
 
     def get_queryset(self):
         tasks = Task.objects.filter(executor=self.request.user.person.id).filter(
-            status="создана").order_by("-time_updated").select_related(
-            "executor").order_by("time_updated")
+            status=StatusModel.objects.get(title="Создана")).order_by("-time_updated").select_related(
+            "executor", "status").order_by("time_updated")
         return tasks
 
 
@@ -148,9 +142,10 @@ def new_task(request):
     if request.method == "POST":
         form = AddTaskForm(request.POST, current_user=current_user)
         if form.is_valid():
+            print(form.cleaned_data)
             form.save()
             task = Task.objects.filter(executor=form.cleaned_data["executor"]).filter(
-                status="создана").order_by("-time_updated")[0]
+                status=StatusModel.objects.get(title="Создана")).order_by("-time_updated")[0]
             send_note(form.cleaned_data["title"], form.cleaned_data["executor"], task)
             logging.info(f"{current_user} made task")
             context = {"menu": get_menu(request), "title": "Главная страница",

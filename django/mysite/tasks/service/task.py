@@ -1,6 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.http import Http404
+from django.shortcuts import render
 from django.views.generic import ListView
+from django.views.generic.edit import FormMixin
 
 import logging
 import os
@@ -8,16 +11,6 @@ import os
 from tasks.models import Task
 from tasks.service.menu_make import get_menu, get_sidebar
 from .celery_producer import send_telegram
-
-
-def get_tasks(request, category: str):
-    if category == "all":
-        tasks = Task.objects.filter(Q(creator=request.user.person) | Q(executor=request.user.person) | Q(
-            is_visible=True)).order_by("-time_updated")
-    else:
-        tasks = Task.objects.filter(Q(creator=request.user.person) | Q(executor=request.user.person) | Q(
-            is_visible=True)).filter(status=category).order_by("-time_updated")
-    return tasks
 
 
 def send_note(title, executor, task):
@@ -35,9 +28,50 @@ class ListTasksMixin(LoginRequiredMixin, ListView):
     allow_empty = True
     paginate_by = int(os.getenv("TASKS_ON_PAGE_COUNT"))
     model = Task
-    http_method_names = ["get"]
+    http_method_names = ["get", "post"]
     template_name = "tasks/tasks_by_page.html"
     context_object_name = "task_list"
+
+    def get_context(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["menu"] = get_menu(self.request)
+        context["sidebar"] = get_sidebar(self.request)
+        return context
+
+
+class ListTaskMixin(LoginRequiredMixin, FormMixin, ListView):
+    allow_empty = True
+    paginate_by = int(os.getenv("TASKS_ON_PAGE_COUNT"))
+    http_method_names = ["get"]
+    template_name = "tasks/task_list.html"
+    context_object_name = "task_list"
+
+    def get(self, request, *args, **kwargs):
+        self.request = request
+        form_class = self.get_form_class()
+        self.form = self.get_form(form_class)
+        self.object_list = self.get_queryset()
+        allow_empty = self.get_allow_empty()
+        if not allow_empty and len(self.object_list) == 0:
+            raise Http404(u"Empty list and '%(class_name)s.allow_empty' is False."
+                          % {'class_name': self.__class__.__name__})
+
+        context = self.get_context_data(object_list=self.object_list, form=self.form)
+        return render(request, "tasks/task_list.html", context=context)
+
+    def get_queryset(self):
+        print("request", self.request)
+        print("request param", type(self.request.GET.get("status")), self.request.GET.get("status"))
+        tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(
+            executor=self.request.user.person) | Q(is_visible=True)).select_related(
+            "creator", "executor", "status").order_by("-time_updated")
+        if self.request.GET.get("creator") is not None and self.request.GET.get("creator") != "":
+            tasks = tasks.filter(creator=self.request.GET.get("creator"))
+        if self.request.GET.get("executor") is not None and self.request.GET.get("executor") != "":
+            tasks = tasks.filter(executor=self.request.GET.get("executor"))
+        if self.request.GET.get("status") is not None and self.request.GET.get("status") != "":
+            tasks = tasks.filter(status=self.request.GET.get("status"))
+        return tasks
 
     def get_context(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
