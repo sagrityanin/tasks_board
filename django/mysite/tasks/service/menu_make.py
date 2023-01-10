@@ -13,12 +13,9 @@ def get_menu(request):
 
 
 def get_sidebar(request):
-    sidebar = [{"url": "tasks/all", "category": "Все задачи"},
-               {"url": "tasks/создана", "category": "Активные"},
-               {"url": "tasks/выполнена", "category": "Выполненные"},
-               {"url": "tasks/отклонена", "category": "Отклоненные"},
+    sidebar = [{"url": "task-list", "category": "Все задачи с фильтром"},
                {"url": "usertasks", "category": "Все задачи пользователя"},
-               {"url": "user-active-tasks", "category": "Задачи пользователя в работе"}
+               {"url": "user-active-tasks", "category": "Задачи пользователя в работе"},
                ]
 
     return sidebar

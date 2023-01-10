@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from dotenv import load_dotenv
 
-urls = ["https://task.info66.ru:4443/tasks/all/",
+urls = ["https://task.info66.ru:4443/task-list/",
         "https://task.info66.ru:4443/usertasks/"]
 url_login = "https://task.info66.ru:4443/login/"
 

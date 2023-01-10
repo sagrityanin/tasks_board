@@ -1,0 +1,76 @@
+{% extends 'tasks/base.html' %}
+
+<!--{% load i18n %}-->
+{% block content %}
+<!--{# .... **Normal content list, maybe a table** .... #}-->
+<h1>{{title}}</h1>
+<form action="{% url 'task_list' %}" method="get" enctype="multipart/form-data">
+    {% csrf_token %}
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+    <div class="form-error">{{ form.non_field_errors }}</div>
+
+{% for f in form %}
+    <label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}
+    <div class="form-error">{{ f.errors }}</div>
+{% endfor %}
+
+    <button type="submit">Выбрать</button>
+<!--    <div >-->
+<!--        {{ form.executor.errors }}-->
+<!--        <label class="form-label" for="{{ form.executor.id_for_label }}">Назначен</label>{{ form.executor }}-->
+<!--    </div>-->
+</form>
+{% if task_list %}
+    <table id="tasks">
+        {% for t in task_list %}
+            <tr class="firstLine">
+                <td colspan="100%"> <h4>{{t.title}}</h4>
+
+                    <p>Создан {{t.creator}}</p>
+                    <p>Создан для {{t.executor}}</p>
+                    <p>Статус задачи - {{ t.status}}</p>
+                 </td>
+                 <td style="width:200px"></td>
+                 <td><div class="clear"></div>
+			<p class="link-read-post"><a href="/task/{{t.id}}">Детали задачи</a></p></td>
+
+            </tr>
+        {% endfor %}
+    </table>
+    {# .... **Now the pagination section** .... #}
+    {% if is_paginated %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a href="{{page_url}}?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="{{page_url}}?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+{% else %}
+    <h3>Список задач</h3>
+    <p>Задачи не найдены!!! :(</p>
+{% endif %}
+{# .... **More content, footer, etc.** .... #}
+
+{% endblock %}

@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from django.db import models
 from django.core.exceptions import ValidationError
 
-from .models import Task, Person
+from .models import Task, Person, StatusModel
 
 
 class LoginUserForm(AuthenticationForm):
@@ -49,3 +50,22 @@ class EditTaskForm(forms.ModelForm):
             "title": forms.TextInput(attrs={"class": "form-input"}),
             "note": forms.Textarea(attrs={"cols": 60, "rows": 10}),
         }
+
+
+class TaskListForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["executor"] = forms.ModelChoiceField(label="Назначена", required=False,
+                                                         queryset=Person.objects.filter(is_executer=True))
+        self.fields["creator"] = forms.ModelChoiceField(label="Создана", required=False,
+                                                        queryset=Person.objects.all())
+        self.fields["status"] = forms.ModelChoiceField(label="Статус", required=False,
+                                                        queryset=StatusModel.objects.all())
+
+    class Meta:
+        model = Task
+        fields = ["creator", "executor", "status"]
+        # widgets = {
+        #     "title": forms.TextInput(attrs={"class": "form-input"}),
+        #     "note": forms.Textarea(attrs={"cols": 60, "rows": 10}),
+        # }

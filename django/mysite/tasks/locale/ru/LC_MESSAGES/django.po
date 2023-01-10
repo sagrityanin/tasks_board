@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-02 17:30+0500\n"
+"POT-Creation-Date: 2023-01-10 06:10+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,90 +20,92 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: tasks/apps.py:8 tasks/models.py:45
+#: tasks/apps.py:8 tasks/models.py:55
 msgid "Tasks"
 msgstr "Задачи"
 
-#: tasks/models.py:26
-msgid "created"
-msgstr "создан"
-
-#: tasks/models.py:27
-msgid "executed"
-msgstr "выполнен"
-
-#: tasks/models.py:28
-msgid "deprecated"
-msgstr "отменен"
-
 #: tasks/models.py:32
-msgid "title"
-msgstr "Цель задачи"
+msgid "status_title"
+msgstr "Статус"
 
-#: tasks/models.py:33
-msgid "note"
-msgstr "Примечание"
-
-#: tasks/models.py:34
-msgid "is_visible"
-msgstr "видимая задача для других сотрудников"
-
-#: tasks/models.py:35
+#: tasks/models.py:36 tasks/models.py:43
 msgid "Status"
 msgstr "Статус"
 
-#: tasks/models.py:36
+#: tasks/models.py:37
+#, fuzzy
+#| msgid "Status"
+msgid "Statuses"
+msgstr "Статусы задач"
+
+#: tasks/models.py:40
+msgid "title"
+msgstr "Цель задачи"
+
+#: tasks/models.py:41
+msgid "note"
+msgstr "Примечание"
+
+#: tasks/models.py:42
+msgid "is_visible"
+msgstr "видимая задача для других сотрудников"
+
+#: tasks/models.py:46
 #, fuzzy
 #| msgid "created"
 msgid "creator"
 msgstr "создатель"
 
-#: tasks/models.py:38
+#: tasks/models.py:48
 #, fuzzy
 #| msgid "executed"
 msgid "executor"
 msgstr "исполнитель"
 
-#: tasks/models.py:44
+#: tasks/models.py:54
 msgid "Task"
 msgstr "Задача"
 
-#: tasks/models.py:55
+#: tasks/models.py:65
 msgid "telegramm"
 msgstr "телеграм"
 
-#: tasks/models.py:56
+#: tasks/models.py:66
 msgid "absent"
 msgstr "Отсутствует"
 
-#: tasks/models.py:61
+#: tasks/models.py:71
 #, fuzzy
 #| msgid "executed"
 msgid "is_executer"
 msgstr "выполнен"
 
-#: tasks/models.py:62
+#: tasks/models.py:72
 msgid "NoteChanal"
 msgstr "Канал для уведомлений"
 
-#: tasks/models.py:64
+#: tasks/models.py:74
 #, fuzzy
 #| msgid "telegramm"
 msgid "telegram_id"
 msgstr "телеграм"
 
-#: tasks/models.py:68
+#: tasks/models.py:78
 msgid "User"
 msgstr "Сотрудник"
 
-#: tasks/models.py:69
+#: tasks/models.py:79
 msgid "Users"
 msgstr "Сотрудники"
 
-#: tasks/templates/tasks/tasks_by_page.html:18
-#, python-format
-msgid " %(t.status)s"
-msgstr ""
+#~ msgid "created"
+#~ msgstr "создан"
+
+#~ msgid "executed"
+#~ msgstr "выполнен"
+
+#~ msgid "deprecated"
+#~ msgstr "отменен"
 
 #~ msgid "name"
 #~ msgstr "Имя"
