@@ -386,6 +386,12 @@ ul.lang-list li a:hover {color: #fdc073;}
     vertical-align: top;
 }
 
+.form-filter {
+    margin-left:30px;
+    display: inline-block;
+    vertical-align: top;
+}
+
 .form-error ul {
     list-style: none;
     padding: 0;
