@@ -102,7 +102,7 @@ class UserActiveTasks(ListTasksMixin):
         return tasks
 
 
-@ratelimit(key='post:username', method=ratelimit.ALL, rate=os.getenv("NEW_TASK_RARELIMIT"))
+@ratelimit(key='post:user', method=ratelimit.UNSAFE, rate=os.getenv("NEW_TASK_RARELIMIT"))
 @login_required(login_url="/login/")
 @transaction.atomic
 def edit_task(request, task_id):
@@ -110,7 +110,7 @@ def edit_task(request, task_id):
         instance = Task.objects.get(pk=task_id)
         form = EditTaskForm(request.POST, instance=instance)
         if not check_user_in_creator_executer(request, task_id):
-            return HttpResponseNotFound(
+            return HttpResponseForbidden(
                 f"<h1>У пользователя: {request.user} нет прав для редактирования этой задачи</h1>")
         if form.is_valid():
             form.save()
@@ -134,7 +134,7 @@ def edit_task(request, task_id):
                                                     "task_link": task_link, "sidebar": get_sidebar(request)})
 
 
-@ratelimit(key='post:username', method=ratelimit.ALL, rate=os.getenv("NEW_TASK_RARELIMIT"))
+@ratelimit(key='post:user', method=ratelimit.ALL, rate=os.getenv("NEW_TASK_RARELIMIT"))
 @login_required(login_url="/login/")
 @transaction.atomic
 def new_task(request):
