@@ -14,6 +14,14 @@ from tasks.service.menu_make import get_menu, get_sidebar
 from .celery_producer import send_telegram
 
 
+def get_task_name(count: int) -> str:
+    if count % 100 != 11 and count % 10 == 1:
+        return "задача"
+    task_list = [2, 3, 4]
+    if count % 10 in task_list and (count % 100) // 10 !=1:
+        return "задачи"
+    return "задач"
+
 def send_note(title, executor, task):
     send_text = f"Для пользователя {executor.user.username} была создана задача \n {title} " \
                 f"\n {os.getenv('URL')}/task/{task.id}"
@@ -60,6 +68,7 @@ class ListTaskMixin(LoginRequiredMixin, FormMixin, ListView):
 
         context = self.get_context_data(object_list=self.object_list, form=self.form)
         context["len"] = len(self.object_list)
+        context["task_name"] = get_task_name(len(self.object_list))
         return render(request, "tasks/task_list.html", context=context)
 
     def get_queryset(self):

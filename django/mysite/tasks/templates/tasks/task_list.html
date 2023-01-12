@@ -33,7 +33,7 @@
 </table>
     <button type="submit">Выбрать</button>
 </form>
-<p>Найдено {{ len }} задач</p>
+<p>Найдено {{ len }} {{ task_name }}</p>
 {% if task_list %}
     <table id="tasks">
         {% for t in task_list %}
