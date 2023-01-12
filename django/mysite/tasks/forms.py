@@ -1,7 +1,5 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-from django.db import models
-from django.core.exceptions import ValidationError
 
 from .models import Task, Person, StatusModel
 
@@ -54,10 +52,6 @@ class EditTaskForm(forms.ModelForm):
 
 class TaskListForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        # print("kwargs", type(kwargs), kwargs)
-        # print(kwargs['params'])
-        # print("kwargs2", type(kwargs), kwargs)
-        # params = kwargs.pop("params")
         super().__init__(*args, **kwargs)
         self.fields["executor"] = forms.ModelChoiceField(label="Назначена", required=False,
                                                          queryset=Person.objects.filter(is_executer=True))

@@ -18,9 +18,10 @@ def get_task_name(count: int) -> str:
     if count % 100 != 11 and count % 10 == 1:
         return "задача"
     task_list = [2, 3, 4]
-    if count % 10 in task_list and (count % 100) // 10 !=1:
+    if count % 10 in task_list and (count % 100) // 10 != 1:
         return "задачи"
     return "задач"
+
 
 def send_note(title, executor, task):
     send_text = f"Для пользователя {executor.user.username} была создана задача \n {title} " \

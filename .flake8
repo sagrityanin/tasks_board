@@ -10,6 +10,8 @@ max-line-length = 121
 
 
 per-file-ignores =
-
-django/mysite/tasks/views.py:W503
-./django/mysite/tasks/views.py:W503
+    django/mysite/tasks/views.py:W503
+    ./django/mysite/tasks/views.py:W503
+    ./django/mysite/coolsite/urls.py:E123
+    ./django/celery/proj/celery.py:E501
+    ./django/mysite/coolsite/settings.py:E501
