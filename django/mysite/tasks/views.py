@@ -1,22 +1,19 @@
 import os
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User as UserClass
 from django.contrib import auth
 from django.db import transaction
-from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
-from django.shortcuts import render, redirect
+from django.http import HttpResponseNotFound, HttpResponse, HttpResponseForbidden
+from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView
 from django.db.models import Q
-from django.views.generic.edit import FormMixin
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 
 import logging
 
-from .models import Task, Person,  StatusModel
+from .models import Task, Person, StatusModel
 from .forms import AddTaskForm, EditTaskForm, LoginUserForm, TaskListForm
 from tasks.service.user import check_user_in_creator_executer
 from tasks.service.menu_make import get_menu, get_sidebar, get_context
@@ -40,8 +37,6 @@ class TaskList(ListTaskMixin):
         return context
 
 
-
-
 @ratelimit(key="post:username", method=ratelimit.ALL, rate=os.getenv("LOGIN_RARELIMIT"))
 def auth_view(request):
     if request.method == "POST":
@@ -59,7 +54,7 @@ def auth_view(request):
     else:
         form = LoginUserForm()
         return render(request, "tasks/login.html", {"form": form, "menu": get_menu(request),
-                                                       "sidebar": get_sidebar(request)})
+                                                    "sidebar": get_sidebar(request)})
 
 
 def index(request):

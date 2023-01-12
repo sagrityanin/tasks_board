@@ -1,5 +1,3 @@
-
-
 def get_menu(request):
     menu = [{"title": "О сайте", "url_name": "/about"},
             {"title": "Добавить задачу", "url_name": "/new-task"}]
@@ -20,8 +18,8 @@ def get_sidebar(request):
 
     return sidebar
 
+
 def get_context(request):
     context = {"menu": get_menu(request), "title": "Главная страница",
                "sidebar": get_sidebar(request)}
     return context
-

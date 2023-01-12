@@ -22,12 +22,6 @@ class UUINMixin(models.Model):
         abstract = True
 
 
-class Status(models.TextChoices):
-    СОЗДАН = "создана"
-    ВЫПОЛНЕН = "выполнена"
-    ОТМЕНЕН = "отменена"
-
-
 class StatusModel(TimeStampMixin, UUINMixin):
     title = models.CharField(verbose_name=_("status_title"), max_length=64, unique=True)
 
@@ -44,6 +38,7 @@ class StatusModel(TimeStampMixin, UUINMixin):
         created_status = cls.objects.get(title="Создана")
         print("get status", created_status)
         return created_status.id
+
 
 class Task(TimeStampMixin, UUINMixin):
     title = models.CharField(verbose_name=_('title'), max_length=255)

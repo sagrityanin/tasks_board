@@ -2,8 +2,6 @@ from django.contrib.auth.backends import ModelBackend, UserModel
 from django.core.exceptions import MultipleObjectsReturned
 from django.db.models import Q
 from django.contrib.auth.models import User
-from django_ratelimit.decorators import ratelimit
-from ratelimitbackend.backends import RateLimitModelBackend
 
 
 class EmailBackend(ModelBackend):

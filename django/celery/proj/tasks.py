@@ -10,7 +10,7 @@ from .celery import app
 def send_telegram_message(telegram_id: str, message: str) -> bool:
     with open("proj/celery.log", "a") as f:
         f.write(telegram_id + ", " + message + "\n" + str(datetime.now()))
-        url = f"https://api.telegram.org/bot" + os.getenv("TELEGRAMM_TOKEN") + "/sendMessage"
+        url = "https://api.telegram.org/bot" + os.getenv("TELEGRAMM_TOKEN") + "/sendMessage"
         r = requests.post(url, data={
             "chat_id": telegram_id,
             "text": message
