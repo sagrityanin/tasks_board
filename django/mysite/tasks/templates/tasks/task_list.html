@@ -22,18 +22,18 @@
 {% endif %}
 
     <div class="form-error">{{ form.non_field_errors }}</div>
-
-{% for f in form %}
-    <label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}
-    <div class="form-error">{{ f.errors }}</div>
-{% endfor %}
-
+<table>
+    <tr>
+        {% for f in form %}
+            <td><label class="form-filter" for="{{ f.id_for_label }}">{{f.label}}: </label> {{ f }}
+                <div class="form-error">{{ f.errors }}</div>
+             </td>
+        {% endfor %}
+    </tr>
+</table>
     <button type="submit">Выбрать</button>
-<!--    <div >-->
-<!--        {{ form.executor.errors }}-->
-<!--        <label class="form-label" for="{{ form.executor.id_for_label }}">Назначен</label>{{ form.executor }}-->
-<!--    </div>-->
 </form>
+<p>Найдено {{ len }} задач</p>
 {% if task_list %}
     <table id="tasks">
         {% for t in task_list %}

@@ -8,6 +8,7 @@ from django.views.generic.edit import FormMixin
 import logging
 import os
 
+from tasks.forms import TaskListForm
 from tasks.models import Task
 from tasks.service.menu_make import get_menu, get_sidebar
 from .celery_producer import send_telegram
@@ -50,6 +51,7 @@ class ListTaskMixin(LoginRequiredMixin, FormMixin, ListView):
         self.request = request
         form_class = self.get_form_class()
         self.form = self.get_form(form_class)
+        self.form = TaskListForm
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
         if not allow_empty and len(self.object_list) == 0:
@@ -57,11 +59,10 @@ class ListTaskMixin(LoginRequiredMixin, FormMixin, ListView):
                           % {'class_name': self.__class__.__name__})
 
         context = self.get_context_data(object_list=self.object_list, form=self.form)
+        context["len"] = len(self.object_list)
         return render(request, "tasks/task_list.html", context=context)
 
     def get_queryset(self):
-        print("request", self.request)
-        print("request param", type(self.request.GET.get("status")), self.request.GET.get("status"))
         tasks = Task.objects.filter(Q(creator=self.request.user.person) | Q(
             executor=self.request.user.person) | Q(is_visible=True)).select_related(
             "creator", "executor", "status").order_by("-time_updated")
