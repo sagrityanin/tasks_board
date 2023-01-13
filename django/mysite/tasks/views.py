@@ -13,17 +13,29 @@ from django_ratelimit.exceptions import Ratelimited
 
 import logging
 
-from .models import Task, Person, StatusModel
-from .forms import AddTaskForm, EditTaskForm, LoginUserForm, TaskListForm
+from .models import Task, Person, StatusModel, Pc
+from .forms import AddTaskForm, EditTaskForm, LoginUserForm, TaskListForm, PcListForm
 from tasks.service.user import check_user_in_creator_executer
 from tasks.service.menu_make import get_menu, get_sidebar, get_context
 from tasks.service.task import send_note, ListTasksMixin, ListTaskMixin
+from tasks.service.pc import ListPcMixin
 from tasks.service.logging import LOGGING
 
 logging.config.dictConfig(LOGGING)
 
 status = {"создана": "Активные задачи", "выполнена": "Выполненые задачи",
           "отклонена": "Отклоненные задачи", "all": "Все задачи"}
+
+
+class PcList(ListPcMixin):
+    form_class = PcListForm
+    model = Pc
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = self.get_context()
+        context["title"] = "Список сотрудников и сетевых узлов"
+        context["page_url"] = "/pc/"
+        return context
 
 
 class TaskList(ListTaskMixin):

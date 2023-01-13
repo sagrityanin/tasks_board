@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
-from .models import Task, Person, StatusModel
+from .models import Task, Person, StatusModel, Pc
 
 
 class LoginUserForm(AuthenticationForm):
@@ -64,3 +64,16 @@ class TaskListForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ["creator", "executor", "status"]
+
+
+
+
+class PcListForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["title"] = forms.ModelChoiceField(label="Сортировать по", required=False,
+                                                         queryset=Pc.objects.all())
+
+    class Meta:
+        model = Pc
+        fields = ["title"]

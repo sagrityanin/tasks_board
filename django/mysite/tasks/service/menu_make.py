@@ -14,6 +14,7 @@ def get_sidebar(request):
     sidebar = [{"url": "task-list", "category": "Все задачи с фильтром"},
                {"url": "usertasks", "category": "Все задачи пользователя"},
                {"url": "user-active-tasks", "category": "Задачи пользователя в работе"},
+               {"url": "pc", "category": "Список сотрудников и компов"}
                ]
 
     return sidebar
