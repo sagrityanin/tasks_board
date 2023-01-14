@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "tasks.apps.TasksConfig",
     "crispy_forms",
     "debug_toolbar",
+    "spurl",
 ]
 
 MIDDLEWARE = [

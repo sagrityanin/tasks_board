@@ -66,14 +66,9 @@ class TaskListForm(forms.ModelForm):
         fields = ["creator", "executor", "status"]
 
 
-
-
-class PcListForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["title"] = forms.ModelChoiceField(label="Сортировать по", required=False,
-                                                         queryset=Pc.objects.all())
-
-    class Meta:
-        model = Pc
-        fields = ["title"]
+class PcListForm(forms.Form):
+    sort_form = forms.TypedChoiceField(label="Сортировать по", required=False,
+                                       choices=[('title', 'По названию'),
+                                                ('telefon_number', 'По номеру телефона'),
+                                                ('ip', 'По ip'),
+                                                ('rdb_user', 'По RDB логину')])
