@@ -92,3 +92,19 @@ class Person(TimeStampMixin, UUINMixin):
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
         instance.person.save()
+
+
+class Pc(TimeStampMixin, UUINMixin):
+    title = models.CharField(verbose_name=_('pc_name'), max_length=255)
+    telefon_number = models.CharField(verbose_name=_('telefon_number'), max_length=128, blank=True, null=True)
+    ip = models.CharField(verbose_name='ip', max_length=16, blank=True, null=True)
+    rdb_user = models.CharField(verbose_name=_('rdb_user'), max_length=128, blank=True, null=True)
+    note = models.TextField(verbose_name=_('note'), blank=True, null=True)
+
+    class Meta:
+        db_table = '"task"."pc"'
+        verbose_name = _("Pc")
+        verbose_name_plural = _("Pc")
+
+    def __str__(self):
+        return self.title

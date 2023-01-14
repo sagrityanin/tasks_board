@@ -1,0 +1,81 @@
+{% extends 'tasks/base.html' %}
+
+<!--{% load i18n %}-->
+{% block content %}
+<!--{# .... **Normal content list, maybe a table** .... #}-->
+<h1>{{title}}</h1>
+<form action="{% url 'pc_list' %}" method="get" enctype="multipart/form-data">
+    {% csrf_token %}
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+    <div class="form-error">{{ form.non_field_errors }}</div>
+<table>
+    <tr>
+        {% for f in form %}
+            <td><label class="form-filter" for="{{ f.id_for_label }}">{{f.label}}: </label> {{ f }}
+                <div class="form-error">{{ f.errors }}</div>
+             </td>
+        {% endfor %}
+    </tr>
+</table>
+    <button type="submit">Сортировать</button>
+</form>
+<p>Найдено {{ len }} сотрудника и сетевых узла</p>
+{% if pc_list %}
+    <table id="pc">
+        <tr>
+            <th class="pc-header1">Сотрудник или сетевой узел</th>
+            <th class="pc-header2">ip </th>
+            <th class="pc-header2">Служебный телефон</th>
+            <th class="pc-header2">Пользователь удаленного рабочего стола</th>
+            <th class="pc-header2">Дополнительная информация</th>
+        </tr>
+        {% for t in pc_list %}
+            <tr>
+                <td class="pc-header1"> {{t.title}}</td>
+                <td class="pc-header2">{{t.ip|default:"" }}</td>
+                <td class="pc-header2">{{t.telefon_number|default:"" }}</td>
+                <td class="pc-header2">{{ t.rdb_user|default:"" }}</td>
+                <td class="pc-header2">{{ t.note|default:"" }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {# .... **Now the pagination section** .... #}
+    {% if is_paginated %}
+        {% load spurl %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a href="{% spurl query=request.GET set_query='page={{ page_obj.previous_page_number }}'%}">
+                        предыдущая</a>
+                {% endif %}
+                <span class="page-current">
+                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="{% spurl query=request.GET set_query='page={{ page_obj.next_page_number }}'%}">
+                        следующая</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+{% else %}
+    <h3>Список задач</h3>
+    <p>Задачи не найдены!!! :(</p>
+{% endif %}
+{# .... **More content, footer, etc.** .... #}
+
+{% endblock %}

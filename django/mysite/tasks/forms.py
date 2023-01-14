@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
-from .models import Task, Person, StatusModel
+from .models import Task, Person, StatusModel, Pc
 
 
 class LoginUserForm(AuthenticationForm):
@@ -64,3 +64,11 @@ class TaskListForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ["creator", "executor", "status"]
+
+
+class PcListForm(forms.Form):
+    sort_form = forms.TypedChoiceField(label="Сортировать по", required=False,
+                                       choices=[('title', 'По названию'),
+                                                ('telefon_number', 'По номеру телефона'),
+                                                ('ip', 'По ip'),
+                                                ('rdb_user', 'По RDB логину')])

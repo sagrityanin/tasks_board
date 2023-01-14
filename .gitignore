@@ -6,3 +6,4 @@ django/coolsite/tasks/__pycache__/*
 /tests/venv/
 /tests/.env
 /tests/geckodriver.log
+/django/mysite/tasks/service/pc.csv

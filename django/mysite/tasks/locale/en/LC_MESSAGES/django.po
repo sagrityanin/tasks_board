@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-10 06:10+0500\n"
+"POT-Creation-Date: 2023-01-13 18:29+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,70 +18,86 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: tasks/apps.py:8 tasks/models.py:55
+#: tasks/apps.py:8 tasks/models.py:58
 msgid "Tasks"
 msgstr ""
 
-#: tasks/models.py:32
+#: tasks/models.py:26
 msgid "status_title"
 msgstr ""
 
-#: tasks/models.py:36 tasks/models.py:43
+#: tasks/models.py:30 tasks/models.py:47
 msgid "Status"
 msgstr ""
 
-#: tasks/models.py:37
+#: tasks/models.py:31
 msgid "Statuses"
 msgstr ""
 
-#: tasks/models.py:40
+#: tasks/models.py:44
 msgid "title"
 msgstr ""
 
-#: tasks/models.py:41
+#: tasks/models.py:45 tasks/models.py:102
 msgid "note"
 msgstr ""
 
-#: tasks/models.py:42
+#: tasks/models.py:46
 msgid "is_visible"
 msgstr ""
 
-#: tasks/models.py:46
+#: tasks/models.py:49
 msgid "creator"
 msgstr ""
 
-#: tasks/models.py:48
+#: tasks/models.py:51
 msgid "executor"
 msgstr ""
 
-#: tasks/models.py:54
+#: tasks/models.py:57
 msgid "Task"
 msgstr ""
 
-#: tasks/models.py:65
+#: tasks/models.py:68
 msgid "telegramm"
 msgstr ""
 
-#: tasks/models.py:66
+#: tasks/models.py:69
 msgid "absent"
 msgstr ""
 
-#: tasks/models.py:71
+#: tasks/models.py:74
 msgid "is_executer"
 msgstr ""
 
-#: tasks/models.py:72
+#: tasks/models.py:75
 msgid "NoteChanal"
 msgstr ""
 
-#: tasks/models.py:74
+#: tasks/models.py:77
 msgid "telegram_id"
 msgstr ""
 
-#: tasks/models.py:78
+#: tasks/models.py:81
 msgid "User"
 msgstr ""
 
-#: tasks/models.py:79
+#: tasks/models.py:82
 msgid "Users"
+msgstr ""
+
+#: tasks/models.py:98
+msgid "pc_name"
+msgstr ""
+
+#: tasks/models.py:99
+msgid "telefon_number"
+msgstr ""
+
+#: tasks/models.py:101
+msgid "rdb_user"
+msgstr ""
+
+#: tasks/models.py:106 tasks/models.py:107
+msgid "Pc"
 msgstr ""
