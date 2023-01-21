@@ -29,11 +29,9 @@ def send_note(title, executor, task):
     if "telegramm" in executor.note_chanal:
         send_telegram(executor.telegramm_id, send_text)
         logging.info(f"Send telegram note to {executor.user.username}")
-    elif "icq" in executor.note_chanal:
+    if "icq" in executor.note_chanal:
         send_icq(executor.icq_id, send_text)
         logging.info(f"Send icq note to {executor.user.username}")
-    else:
-        logging.info(f"Nowhere to send note for {executor.user.username}")
 
 
 class ListTasksMixin(LoginRequiredMixin, ListView):
