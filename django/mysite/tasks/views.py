@@ -148,7 +148,6 @@ def new_task(request):
     if request.method == "POST":
         form = AddTaskForm(request.POST, current_user=current_user)
         if form.is_valid():
-            print(form.cleaned_data)
             form.save()
             task = Task.objects.filter(executor=form.cleaned_data["executor"]).filter(
                 status=StatusModel.objects.get(title="Создана")).order_by("-time_updated")[0]

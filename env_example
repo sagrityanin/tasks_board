@@ -31,3 +31,4 @@ CELERY_REDIS_DB=1
 
 #Celery worker
 TELEGRAMM_TOKEN = "telegram token"
+ICQ_TOKEN="icq_token"

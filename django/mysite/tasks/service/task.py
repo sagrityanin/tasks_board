@@ -11,7 +11,7 @@ import os
 from tasks.forms import TaskListForm
 from tasks.models import Task
 from tasks.service.menu_make import get_menu, get_sidebar
-from .celery_producer import send_telegram
+from .celery_producer import send_telegram, send_icq
 
 
 def get_task_name(count: int) -> str:
@@ -26,10 +26,12 @@ def get_task_name(count: int) -> str:
 def send_note(title, executor, task):
     send_text = f"Для пользователя {executor.user.username} была создана задача \n {title} " \
                 f"\n {os.getenv('URL')}/task/{task.id}"
-    if executor.note_chanal == "telegramm":
+    if "telegramm" in executor.note_chanal:
         send_telegram(executor.telegramm_id, send_text)
         logging.info(f"Send telegram note to {executor.user.username}")
-
+    elif "icq" in executor.note_chanal:
+        send_icq(executor.icq_id, send_text)
+        logging.info(f"Send icq note to {executor.user.username}")
     else:
         logging.info(f"Nowhere to send note for {executor.user.username}")
 

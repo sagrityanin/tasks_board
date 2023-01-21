@@ -66,6 +66,7 @@ class Task(TimeStampMixin, UUINMixin):
 
 class NoteChanal(models.TextChoices):
     TELEGRAMM = "telegramm", _("telegramm")
+    ICQ = "icq"
     ABSENT = "absent", _("absent")
 
 
@@ -75,6 +76,7 @@ class Person(TimeStampMixin, UUINMixin):
     note_chanal = models.TextField(verbose_name=_("NoteChanal"), choices=NoteChanal.choices,
                                    null=True, default="telegramm")
     telegramm_id = models.CharField(verbose_name=_("telegram_id"), max_length=255, blank=True)
+    icq_id = models.CharField(verbose_name="icq_id", max_length=255, blank=True)
 
     class Meta:
         db_table = '"task"."person"'
