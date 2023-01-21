@@ -5,8 +5,7 @@ from django.contrib.auth.models import User as UserClass
 from django.contrib import auth
 from django.db import transaction
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseForbidden
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
@@ -59,8 +58,8 @@ def auth_view(request):
         if user is not None:
             if user.is_active:
                 auth.login(request, user)
-                return render(request, "tasks/index.html", {"menu": get_menu(request), "title": "Главная страница",
-                                                            "sidebar": get_sidebar(request)})
+                redirect_uri = request.GET.get("next", "/")
+                return redirect(redirect_uri)
         else:
             return HttpResponse("<h2>Invalid username or password</h2>")
     else:
@@ -149,7 +148,6 @@ def new_task(request):
     if request.method == "POST":
         form = AddTaskForm(request.POST, current_user=current_user)
         if form.is_valid():
-            print(form.cleaned_data)
             form.save()
             task = Task.objects.filter(executor=form.cleaned_data["executor"]).filter(
                 status=StatusModel.objects.get(title="Создана")).order_by("-time_updated")[0]

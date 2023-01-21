@@ -1,8 +1,11 @@
 import uuid
+
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django import forms
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
@@ -64,17 +67,29 @@ class Task(TimeStampMixin, UUINMixin):
         return reverse('task', kwargs={'id': self.id})
 
 
-class NoteChanal(models.TextChoices):
-    TELEGRAMM = "telegramm", _("telegramm")
-    ABSENT = "absent", _("absent")
+class ModifiedArrayField(ArrayField):
+    def formfield(self, **kwargs):
+        defaults = {
+            "form_class": forms.MultipleChoiceField,
+            "choices": self.base_field.choices,
+            "widget": forms.CheckboxSelectMultiple,
+            **kwargs
+        }
+        return super(ArrayField, self).formfield(**defaults)
 
 
 class Person(TimeStampMixin, UUINMixin):
+    LABELS_CHOICES = (
+        ("telegramm", "telegramm"),
+        ("icq", "icq"),
+        ("whatsapp", "whatsapp"),
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_executer = models.BooleanField(verbose_name=_("is_executer"), null=False, default=False, db_index=True)
-    note_chanal = models.TextField(verbose_name=_("NoteChanal"), choices=NoteChanal.choices,
-                                   null=True, default="telegramm")
+    note_chanal = ModifiedArrayField(models.CharField(choices=LABELS_CHOICES, max_length=100, blank=True, null=True),
+        blank=True, null=True)
     telegramm_id = models.CharField(verbose_name=_("telegram_id"), max_length=255, blank=True)
+    icq_id = models.CharField(verbose_name="icq_id", max_length=255, blank=True)
 
     class Meta:
         db_table = '"task"."person"'
