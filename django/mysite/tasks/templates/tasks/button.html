@@ -1,0 +1,50 @@
+{% extends "tasks/base.html" %}
+
+{% load static %}
+
+
+<!--{% load crispy_forms_tags %}-->
+{% block content %}
+<h1>{{title}}</h1>
+<script>
+function alerted(){
+  alert("Вы нажали на кнопку");
+}
+</script>
+
+<button type="submit" id="submit" onclick="alerted();">Нажми меня</button>
+
+<form method="post">
+    {% csrf_token %}
+
+    {{ form.user }}
+    {{ form.user_name }}
+    {{ form.email }}
+    {{ form.text }}
+{{ form.captcha.label }}
+{{ form.captcha }}
+{{ form.captcha.errors }}
+    <input type="submit">
+<button>
+    <img src="{% static 'tasks/images/reload.png' %}">
+</button>
+</form>
+{% endblock %}
+<script src="https://cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script>
+<script>
+     //Нажмите Обновить проверочный код.
+    $(function () {
+        $('.captcha').css({
+            'cursor': 'pointer'
+        });
+        //  обновление ajax
+        $('.captcha').click(function () {
+            console.log('click');
+            $.get("{% url 'captcha-refresh' %}",
+                function (result) {
+                    $('.captcha').attr('src', result['image_url']);
+                    $('#id_captcha_0').val(result['key'])
+                });
+        });
+    })
+</script>

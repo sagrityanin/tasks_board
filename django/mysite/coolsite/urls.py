@@ -9,7 +9,8 @@ from tasks.views import view_handler403
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('tasks.urls'))
+    path('', include('tasks.urls')),
+    path('captcha/', include('captcha.urls')),
 ]
 if settings.DEBUG:
     import debug_toolbar

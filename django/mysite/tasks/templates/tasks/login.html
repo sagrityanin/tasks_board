@@ -1,4 +1,7 @@
 {% extends "tasks/base.html" %}
+{% load static %}
+
+
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="content-section">
@@ -7,10 +10,21 @@
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Вход</legend>
                 {{ form|crispy }}
+                <script>
+                    function refresh(){
+                    alert("Вы нажали на кнопку");
+                    }
+                    </script>
+                <button id="reset" type="button" onclick="refresh();">Reset</button>
             </fieldset>
+
+
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Войти</button>
             </div>
         </form>
     </div>
+
+
+
 {% endblock content %}

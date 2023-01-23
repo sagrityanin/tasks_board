@@ -123,3 +123,18 @@ class Pc(TimeStampMixin, UUINMixin):
 
     def __str__(self):
         return self.title
+
+
+class MyModel(TimeStampMixin, UUINMixin):
+    user = models.CharField(verbose_name="user", max_length=255)
+    user_name = models.CharField(verbose_name="user_name", max_length=255)
+    email = models.CharField(verbose_name="email", max_length=255)
+    text = models.CharField(verbose_name="text", max_length=255)
+
+    class Meta:
+        db_table = '"task"."mymodel"'
+        verbose_name = "mymodel"
+        verbose_name_plural = "mymodel"
+
+    def __str__(self):
+        return self.user

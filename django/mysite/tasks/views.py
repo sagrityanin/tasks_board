@@ -1,5 +1,5 @@
 import os
-
+from captcha.fields import CaptchaField
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User as UserClass
 from django.contrib import auth
@@ -13,7 +13,7 @@ from django_ratelimit.exceptions import Ratelimited
 import logging
 
 from .models import Task, Person, StatusModel, Pc
-from .forms import AddTaskForm, EditTaskForm, LoginUserForm, TaskListForm, PcListForm
+from .forms import AddTaskForm, EditTaskForm, LoginUserForm, TaskListForm, PcListForm, CommentForm, CommentFormCaptcha
 from tasks.service.user import check_user_in_creator_executer
 from tasks.service.menu_make import get_menu, get_sidebar, get_context
 from tasks.service.task import send_note, ListTasksMixin, ListTaskMixin
@@ -179,3 +179,36 @@ def view_handler403(request, exception=None):
         context["title"] = "Доступ временно заблокирован"
         return render(request, "tasks/403.html", context=context)
     return HttpResponseForbidden('Sorry Forbidden')
+
+def button(request):
+    # Определяем форму без капчи
+    form_user = CommentForm()
+    # Определяем форму с капчей
+    form = CommentFormCaptcha()
+    # Делаем проверку, если пользователь не авторизован то показываем ему форму с капчей.
+    if not request.user.is_authenticated:
+        form = CommentFormCaptcha(request.POST or None)
+        if request.method == 'POST':
+            print("post")
+            if form.is_valid():
+                print("form valid")
+                human = True
+                return HttpResponse("Good")
+            else:
+                print("form invalid")
+        else:
+            form = CommentFormCaptcha()
+    # Если пользователь авторизован то показываем ему форму без капчи.
+    else:
+        form_user = CommentForm(request.POST or None)
+        if request.method == 'POST':
+            if form_user.is_valid():
+                return HttpResponse("Good")
+        else:
+            form = CommentForm()
+    context = get_context(request)
+    context["title"] = "Button test"
+    context["form"] = form
+    context["form_user"] = form_user
+    return render(request, 'tasks/button.html', context=context)
+    # return render(request, "tasks/button.html", context=context)

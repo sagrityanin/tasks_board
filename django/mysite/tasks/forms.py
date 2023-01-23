@@ -1,13 +1,15 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from captcha.fields import CaptchaField
 
-from .models import Task, Person, StatusModel, Pc
+from .models import Task, Person, StatusModel, Pc, MyModel
 
 
 class LoginUserForm(AuthenticationForm):
     # email = forms.CharField(label='Емайл', widget=forms.TextInput(attrs={'class': 'form-input'}))
     # username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    captcha = CaptchaField(label='Are you an human? ')
 
 
 class AddTaskForm(forms.ModelForm):
@@ -72,3 +74,16 @@ class PcListForm(forms.Form):
                                                 ('telefon_number', 'По номеру телефона'),
                                                 ('ip', 'По ip'),
                                                 ('rdb_user', 'По RDB логину')])
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = MyModel
+        fields = ['user', 'user_name', 'email', 'text']
+
+
+class CommentFormCaptcha(forms.ModelForm):
+    captcha = CaptchaField(label='Are you an human? ')
+    class Meta:
+        model = MyModel
+        fields = ['user', 'user_name', 'email', 'text']

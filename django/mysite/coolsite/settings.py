@@ -19,8 +19,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "tasks.apps.TasksConfig",
     "crispy_forms",
+    "django.forms",
     "debug_toolbar",
     "spurl",
+    "captcha",
 ]
 
 MIDDLEWARE = [
@@ -116,6 +118,8 @@ CACHES = {
     }
 }
 RATELIMIT_USE_CACHE = "cache-for-ratelimiting"
+# FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.random_char_challenge'
 
 if DEBUG:
     import socket
