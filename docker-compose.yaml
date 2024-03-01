@@ -78,7 +78,7 @@ services:
       celery-redis:
         condition: service_started
       task_app:
-        condition: service_healthy
+        condition: service_started
 #    healthcheck:
 #      test: curl --fail -s http://task-app:8000/ || exit 1
 #      interval: 20s
