@@ -15,14 +15,8 @@ services:
     env_file: .env
 
   task_app:
-    build:
-      context: ./django
-      dockerfile: Dockerfile_dev
-    image: django:${TAG}
+    image: registry.info66.ru:5000/tasks_board:app
     container_name: task_app
-    volumes:
-      - ./django/mysite:/home/app
-      - ./django/celery/proj:/home/app/proj
     environment:
       - THREADS=without
     expose:
@@ -32,7 +26,7 @@ services:
     depends_on:
       task_db:
         condition: service_healthy
-    command: /bin/bash -c "python manage.py makemigrations; python manage.py makemigrations tasks; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
+    # command: /bin/bash -c "python manage.py makemigrations; python manage.py makemigrations tasks; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
     healthcheck:
       test: curl --fail -s http://127.0.0.1:8000/ || exit 1
       interval: 20s
@@ -73,7 +67,7 @@ services:
       REDIS_HOST: $CELERY_REDIS_HOST
       REDIS_PORT: $CELERY_REDIS_PORT
 #      REDIS_PASSWORD: $CELERY_REDIS_PASSWORD
-    image: redis:7.0.5
+    image: redis:7.0.11-alpine3.18
 #    depends_on:
 #      rabbitmq-manager:
 #        condition: service_healthy
@@ -89,19 +83,13 @@ services:
       - my-network
 
   celery_worker:
-    build:
-      context: ./django/celery
-      dockerfile: Dockerfile_dev
-    image: celery_worker:${TAG}
+    image: registry.info66.ru:5000/tasks_board:celery_worker
     container_name: celery_worker
-    volumes:
-      - ./django/celery/:/home/app
     depends_on:
       celery-redis:
         condition: service_started
 #      task_app:
 #        condition: service_healthy
-    command: /bin/bash -c "/home/app/worker.sh"
 #    healthcheck:
 #      test: curl --fail -s http://task-app:8000/ || exit 1
 #      interval: 20s

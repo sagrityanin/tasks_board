@@ -21,5 +21,8 @@
 ### Подготовка для k8s
 docker build ./nginx -t registry.info66.ru:5000/tasks_board:proxy
 docker push registry.info66.ru:5000/tasks_board:proxy
-
+docker build ./django/celery -t registry.info66.ru:5000/tasks_board:celery_worker
+docker push registry.info66.ru:5000/tasks_board:celery_worker
+docker build ./django -t registry.info66.ru:5000/tasks_board:app
+docker push registry.info66.ru:5000/tasks_board:app
 
