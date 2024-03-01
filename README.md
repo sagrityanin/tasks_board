@@ -17,3 +17,9 @@
 - настроить nginx: настройка доменного имени. сертификатов ssl, портов
 - создать суперпользователя(docker compose exec task_app python manage.py createsuperuser)
 - настроить пользователей в админпанели Django
+
+### Подготовка для k8s
+docker build ./nginx -t registry.info66.ru:5000/tasks_board:proxy
+docker push registry.info66.ru:5000/tasks_board:proxy
+
+
