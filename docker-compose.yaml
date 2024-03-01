@@ -23,7 +23,6 @@ services:
     depends_on:
       task_db:
         condition: service_healthy
-    # command: /bin/bash -c "python manage.py makemigrations; python manage.py makemigrations tasks; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
     healthcheck:
       test: curl --fail -s http://127.0.0.1:8000/ || exit 1
       interval: 20s
@@ -63,9 +62,6 @@ services:
       REDIS_PORT: $CELERY_REDIS_PORT
 #      REDIS_PASSWORD: $CELERY_REDIS_PASSWORD
     image: redis:7.0.11-alpine3.18
-#    depends_on:
-#      rabbitmq-manager:
-#        condition: service_healthy
     healthcheck:
       test: redis-cli -a $CELERY_REDIS_PASSWORD ping || exit 1
       interval: 10s
@@ -81,8 +77,8 @@ services:
     depends_on:
       celery-redis:
         condition: service_started
-#      task_app:
-#        condition: service_healthy
+      task_app:
+        condition: service_healthy
 #    healthcheck:
 #      test: curl --fail -s http://task-app:8000/ || exit 1
 #      interval: 20s
