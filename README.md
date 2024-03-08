@@ -9,7 +9,7 @@
 - task_aap - Django-приложение осуществляет обработку запросов пользователей и 
     создане Selery-задач для уведомления пользователей
 - task_db - Postgresql, база данных проекта
-- celery-redis - Selery-brocker
+- celery-redis - Celery-brocker
 - celery_worker - берет задачи из брокера и выполняет их(уведомления пользователей)
 
 ### ЗАПУСК ПРОЕКТА
