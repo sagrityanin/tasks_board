@@ -15,3 +15,4 @@ django/mysite/tasks/migrations
 django/mysite/tasks/service/__pycache__
 nginx/ssl/*.pem
 doc/*.odt
+.env

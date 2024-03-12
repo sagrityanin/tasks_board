@@ -12,9 +12,9 @@ services:
     depends_on:
       - task_app
 #        condition: service_healthy
-    env_file: .env
+    # env_file: .env
 
-  task_app:
+  task-app:
     image: registry.info66.ru:5000/tasks_board:app
     container_name: task_app
     environment:
