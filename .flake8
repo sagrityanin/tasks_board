@@ -9,6 +9,7 @@ exclude =
 max-line-length = 121
 
 
+
 per-file-ignores =
     django/mysite/tasks/views.py:W503
     ./django/mysite/tasks/views.py:W503

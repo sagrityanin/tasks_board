@@ -7,7 +7,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 DEBUG = os.getenv("DJANGO_DEBUG")
 
-ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS"), "127.0.0.1"]
+ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS").split(","), "127.0.0.1"]
 CSRF_TRUSTED_ORIGINS = [os.getenv("CSRF_TRUSTED_ORIGINS"), ]
 
 INSTALLED_APPS = [

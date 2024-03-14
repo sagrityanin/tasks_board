@@ -8,9 +8,11 @@ django/coolsite/tasks/__pycache__/*
 /tests/geckodriver.log
 /django/mysite/tasks/service/pc.csv
 .idea
+django/mysite/app.log
 django/mysite/coolsite/__pycache__
 django/mysite/tasks/__pycache__
-django/mysite/tasks/migrations/
+django/mysite/tasks/migrations
 django/mysite/tasks/service/__pycache__
 nginx/ssl/*.pem
-doc
+doc/*.odt
+.env

@@ -1,35 +1,26 @@
 services:
 
   nginx:
-    image: nginx:1.22.0
-    container_name: nginx
+    image: registry.info66.ru:5000/tasks_board:proxy
+    container_name: tasks_proxy
     restart: always
     ports:
       - 4443:443
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/static:/home/static:ro
-      - ./nginx/ssl:/ssl:ro
     networks:
       - my-network
     depends_on:
-      task_app:
-        condition: service_healthy
+      - task_app
+#        condition: service_healthy
     env_file: .env
 
-  task_app:
-    build:
-      context: ./django
-      dockerfile: Dockerfile
-    image: django:${TAG}
+  task-app:
+    image: registry.info66.ru:5000/tasks_board:app
     container_name: task_app
     environment:
       - THREADS=without
     expose:
       - 8000
     depends_on:
-
       task_db:
         condition: service_healthy
     healthcheck:
@@ -70,7 +61,7 @@ services:
       REDIS_HOST: $CELERY_REDIS_HOST
       REDIS_PORT: $CELERY_REDIS_PORT
 #      REDIS_PASSWORD: $CELERY_REDIS_PASSWORD
-    image: redis:7.0.5
+    image: redis:7.0.11-alpine3.18
     healthcheck:
       test: redis-cli -a $CELERY_REDIS_PASSWORD ping || exit 1
       interval: 10s
@@ -81,20 +72,25 @@ services:
       - my-network
 
   celery_worker:
-    build:
-      context: ./django/celery
-      dockerfile: Dockerfile
-    image: celery_worker:${TAG}
+    image: registry.info66.ru:5000/tasks_board:celery_worker
     container_name: celery_worker
     depends_on:
       celery-redis:
         condition: service_started
+      task_app:
+        condition: service_started
+#    healthcheck:
+#      test: curl --fail -s http://task-app:8000/ || exit 1
+#      interval: 20s
+#      timeout: 10s
+#      retries: 3
     networks:
       - my-network
     env_file: .env
 
 volumes:
   tasks_postgres_volume:
+
 
 networks:
     my-network:
