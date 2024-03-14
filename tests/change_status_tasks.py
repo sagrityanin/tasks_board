@@ -32,6 +32,9 @@ def main(count: int) -> None:
         for i in range(count):
             browser.get("https://task.info66.ru:4443/task-list")
             sleep(1)
+            browser.find_element(By.ID, "id_executor").find_element(By.XPATH, "//*[contains(text(), 'andrey')]").click()
+
+            sleep(3)
             list_tasks = browser.find_elements(By.XPATH, "//*[contains(text(), 'Детали задачи')]")
             if len(list_tasks) > 0:
                 list_tasks[0].click()
