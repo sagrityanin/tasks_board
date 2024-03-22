@@ -22,6 +22,7 @@ COPY --from=build /etc/group /etc/
 
 #CMD ["gunicorn", "coolsite.wsgi", "--bind 0.0.0.0:8000", "--workers 2"]
 RUN chmod +x /home/app/entrypoint.sh
+RUN chmod +x /home/app/migration.sh
 RUN chown -R ubuntu:ubuntu /home/app
 USER ubuntu
 ENTRYPOINT ["/home/app/entrypoint.sh"]
