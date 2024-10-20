@@ -1,3 +1,7 @@
-#! /bin/bash
-rm proj/celery.log
-celery -A proj worker -l INFO
+#! /bin/sh
+if [ -e proj/celery.log ]
+then
+    rm proj/celery.log
+fi
+
+exec celery -A proj worker -l INFO
