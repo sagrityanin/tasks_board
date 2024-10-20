@@ -53,10 +53,10 @@ class PcList(ListPcMixin):
     def get_queryset(self):
         query = Pc.objects.all()
         if search := self.request.GET.get("q"):
-            query = query.filter(Q(title__contains=search)
-                                  | Q(telefon_number__contains=search)
-                                  | Q(ip__contains=search)
-                                  | Q(rdb_user__contains=search))
+            query = query.filter(Q(title__icontains=search)
+                                  | Q(telefon_number__icontains=search)
+                                  | Q(ip__icontains=search)
+                                  | Q(rdb_user__icontains=search))
         if sort_field := self.request.GET.get("sort_form"):
             query = query.order_by(sort_field)
         else:
