@@ -15,7 +15,7 @@
 ### ЗАПУСК ПРОЕКТА
 После развертывания проекта нужно:
 - настроить nginx: настройка доменного имени. сертификатов ssl, портов
-- создать суперпользователя(docker compose exec task_app python manage.py createsuperuser)
+- создать суперпользователя(docker compose exec task-app python manage.py createsuperuser)
 - настроить пользователей в админпанели Django
 
 ### Подготовка для k8s

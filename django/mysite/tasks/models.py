@@ -120,6 +120,7 @@ class Pc(TimeStampMixin, UUINMixin):
         db_table = '"task"."pc"'
         verbose_name = _("Pc")
         verbose_name_plural = _("Pc")
+        # search_fields = ["title", "ip", "rdb_user"]
 
     def __str__(self):
         return self.title
