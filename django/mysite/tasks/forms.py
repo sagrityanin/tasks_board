@@ -72,3 +72,4 @@ class PcListForm(forms.Form):
                                                 ('telefon_number', 'По номеру телефона'),
                                                 ('ip', 'По ip'),
                                                 ('rdb_user', 'По RDB логину')])
+    # q = forms.CharField(label="Поиск по названию, номеру телефона, ip и RDB логину", required=False)

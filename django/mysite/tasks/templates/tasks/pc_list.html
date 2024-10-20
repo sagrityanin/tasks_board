@@ -4,8 +4,11 @@
 {% block content %}
 <!--{# .... **Normal content list, maybe a table** .... #}-->
 <h1>{{title}}</h1>
+<p class="form-filter" >Поиск по <b>названию, номеру телефона, ip и RDB логину</b> </p>
 <form action="{% url 'pc_list' %}" method="get" enctype="multipart/form-data">
     {% csrf_token %}
+    <input class="form-filter" name="q" type="text" placeholder="Search...">
+    <button class="form-filter" type="submit">Поиск</button>
 {% if form.errors %}
     {% for field in form %}
         {% for error in field.errors %}
