@@ -35,6 +35,33 @@ class PcList(ListPcMixin):
         context["title"] = "Список сотрудников и сетевых узлов"
         context["page_url"] = "/pc/"
         return context
+    
+    def get_query_params(self):
+        res = ""
+        if field := self.request.GET.get("sort_form"):
+            res = f"sort_form={field}"
+            if order := self.request.GET.get("order_form"):
+                res += f"&order_form={order}"
+        if sort_string := self.request.GET.get("sort_form"):
+            res += f"&sort_form={sort_string}"
+        if order := self.request.GET.get("order_form"):
+            res += f"&order_form={order}"
+        if search_string := self.request.GET.get("q"):
+            res += f"&q={search_string}"
+        return res
+
+    def get_queryset(self):
+        query = Pc.objects.all()
+        if search := self.request.GET.get("q"):
+            query = query.filter(Q(title__contains=search)
+                                  | Q(telefon_number__contains=search)
+                                  | Q(ip__contains=search)
+                                  | Q(rdb_user__contains=search))
+        if sort_field := self.request.GET.get("sort_form"):
+            query = query.order_by(sort_field)
+        else:
+            query = query.order_by("title")
+        return query
 
 
 class TaskList(ListTaskMixin):

@@ -4,4 +4,10 @@ from .models import Person, Task, StatusModel, Pc
 admin.site.register(Person)
 admin.site.register(Task)
 admin.site.register(StatusModel)
-admin.site.register(Pc)
+@admin.register(Pc)
+class PcAdmin(admin.ModelAdmin):
+    list_display = ("title", "telefon_number", "ip", "rdb_user", "note")
+    ordering = ["title"]
+    list_per_page = 15
+    search_fields = ["title", "telefon_number", "ip", "rdb_user"]
+
