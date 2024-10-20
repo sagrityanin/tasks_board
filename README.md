@@ -25,3 +25,6 @@ docker build ./django/celery -t sagrityanin4/tasks_board_worker:1.0
 docker push sagrityanin4/tasks_board_worker:1.0
 docker build ./django -t sagrityanin4/tasks_board_app:1.1
 docker push sagrityanin4/tasks_board_app:1.1
+
+ docker build ./django -f ./django/Dockerfile_init -t sagrityanin4/tasks_board_init:1.0
+  docker push sagrityanin4/tasks_board_init:1.0
