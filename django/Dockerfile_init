@@ -25,4 +25,4 @@ RUN chmod +x /home/app/entrypoint.sh
 RUN chmod +x /home/app/migration.sh
 RUN chown -R ubuntu:ubuntu /home/app
 USER ubuntu
-ENTRYPOINT ["/home/app/entrypoint.sh"]
+ENTRYPOINT ["/home/app/migration.sh"]

@@ -1,7 +1,7 @@
 services:
 
   nginx:
-    image: registry.info66.ru:5000/tasks_board:proxy
+    image: sagrityanin4/tasks_board_proxy:1.0
     container_name: tasks_proxy
     restart: always
     ports:
@@ -9,12 +9,12 @@ services:
     networks:
       - my-network
     depends_on:
-      - task_app
+      - task-app
 #        condition: service_healthy
     # env_file: .env
 
   task-app:
-    image: registry.info66.ru:5000/tasks_board:app
+    image: sagrityanin4/tasks_board_app:1.0
     container_name: task_app
     environment:
       - THREADS=without
@@ -46,8 +46,8 @@ services:
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
       - ./postgres/postgres_config/set_schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
-    ports:
-      - 5432:5432
+    # ports:
+    #   - 5432:5432
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U app -d tasks" ]
       start_period: 10s
@@ -82,7 +82,7 @@ services:
       - my-network
 
   celery_worker:
-    image: registry.info66.ru:5000/tasks_board:celery_worker
+    image: sagrityanin4/tasks_board_worker:1.0
     container_name: celery_worker
     depends_on:
       celery-redis:

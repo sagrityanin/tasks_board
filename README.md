@@ -19,10 +19,12 @@
 - настроить пользователей в админпанели Django
 
 ### Подготовка для k8s
-docker build ./nginx -t registry.info66.ru:5000/tasks_board:proxy
-docker push registry.info66.ru:5000/tasks_board:proxy
-docker build ./django/celery -t registry.info66.ru:5000/tasks_board:celery_worker
-docker push registry.info66.ru:5000/tasks_board:celery_worker
-docker build ./django -t registry.info66.ru:5000/tasks_board:app
-docker push registry.info66.ru:5000/tasks_board:app
+docker build ./nginx -t sagrityanin4/tasks_board_proxy:1.0
+docker push sagrityanin4/tasks_board_proxy:1.0
+docker build ./django/celery -t sagrityanin4/tasks_board_worker:1.0
+docker push sagrityanin4/tasks_board_worker:1.0
+docker build ./django -t sagrityanin4/tasks_board_app:1.1
+docker push sagrityanin4/tasks_board_app:1.1
 
+ docker build ./django -f ./django/Dockerfile_init -t sagrityanin4/tasks_board_init:1.0
+  docker push sagrityanin4/tasks_board_init:1.0
