@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
-from .models import Task, Person, StatusModel, Pc
+from .models import Task, Person, StatusModel, Pc, TaskSection
 
 
 class LoginUserForm(AuthenticationForm):
@@ -19,12 +19,14 @@ class AddTaskForm(forms.ModelForm):
         self.fields["creator"] = forms.ModelChoiceField(label="Задача создана",
                                                         initial=Person.objects.get(user=current_user),
                                                         queryset=Person.objects.filter(user=current_user))
+        self.fields["section"] = forms.ModelChoiceField(label="Категория задач",
+                                                        queryset=TaskSection.objects.all())
         if "instance" in kwargs and kwargs["instance"].creator:
             self.fields["creator"].disabled = True
 
     class Meta:
         model = Task
-        fields = ["title", "note", "is_visible", "creator", "executor"]
+        fields = ["title", "note", "is_visible", "creator", "executor", "section"]
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-input"}),
             "note": forms.Textarea(attrs={"cols": 60, "rows": 10}),
@@ -38,12 +40,14 @@ class EditTaskForm(forms.ModelForm):
         self.fields["executor"] = forms.ModelChoiceField(label="Назначен",
                                                          queryset=Person.objects.filter(is_executer=True))
         self.fields["creator"] = forms.ModelChoiceField(label="Создан", queryset=Person.objects.all())
+        self.fields["section"] = forms.ModelChoiceField(label="Категория задач",
+                                                        queryset=TaskSection.objects.all())
         if "instance" in kwargs and kwargs["instance"].creator:
             self.fields["creator"].disabled = True
 
     class Meta:
         model = Task
-        fields = ["title", "note", "is_visible", "status", "creator", "executor"]
+        fields = ["title", "note", "is_visible", "status", "creator", "executor", "section"]
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-input"}),
             "note": forms.Textarea(attrs={"cols": 60, "rows": 10}),
@@ -60,10 +64,13 @@ class TaskListForm(forms.ModelForm):
         self.fields["status"] = forms.ModelChoiceField(label="Статус", required=False,
                                                        queryset=StatusModel.objects.all(),
                                                        )
+        self.fields["section"] = forms.ModelChoiceField(label="Категория задач", required=False,
+                                                       queryset=TaskSection.objects.all(),
+                                                       )
 
     class Meta:
         model = Task
-        fields = ["creator", "executor", "status"]
+        fields = ["creator", "executor", "status", "section"]
 
 
 class PcListForm(forms.Form):
@@ -72,4 +79,3 @@ class PcListForm(forms.Form):
                                                 ('telefon_number', 'По номеру телефона'),
                                                 ('ip', 'По ip'),
                                                 ('rdb_user', 'По RDB логину')])
-    # q = forms.CharField(label="Поиск по названию, номеру телефона, ip и RDB логину", required=False)
