@@ -19,7 +19,7 @@ services:
     # env_file: .env
 
   task-app:
-    image: sagrityanin4/tasks_board_app:1.1
+    image: sagrityanin4/tasks_board_app:1.2
     container_name: task_app
     environment:
       - THREADS=without
@@ -56,7 +56,7 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U app -d tasks" ]
       start_period: 10s
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 5
     networks:
