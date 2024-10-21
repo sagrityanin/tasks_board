@@ -53,6 +53,8 @@ class Task(TimeStampMixin, UUINMixin):
                                 related_name="creator")
     executor = models.ForeignKey("Person", verbose_name=_('executor'), on_delete=models.CASCADE,
                                  related_name="executor")
+    section = models.ForeignKey("TaskSection", verbose_name=_("task_section"), on_delete=models.CASCADE,
+                                related_name="section", null=True)
 
     class Meta:
         db_table = '"task"."task"'
@@ -120,6 +122,18 @@ class Pc(TimeStampMixin, UUINMixin):
         db_table = '"task"."pc"'
         verbose_name = _("Pc")
         verbose_name_plural = _("Pc")
+
+    def __str__(self):
+        return self.title
+
+class TaskSection(TimeStampMixin, UUINMixin):
+    title = models.CharField(verbose_name=_('task_section_name'), max_length=255)
+    note = models.TextField(verbose_name=_('note'), blank=True, null=True)
+
+    class Meta:
+        db_table = '"task"."task_section"'
+        verbose_name = _("TaskSection")
+        verbose_name_plural = _("TaskSection")
 
     def __str__(self):
         return self.title
