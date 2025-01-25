@@ -44,6 +44,7 @@
             <th class="pc-header2">ip </th>
             <th class="pc-header2">Служебный телефон</th>
             <th class="pc-header2">Пользователь удаленного рабочего стола</th>
+            <th class="pc-header2">Email</th>
             <th class="pc-header2">Дополнительная информация</th>
         </tr>
         {% for t in pc_list %}
@@ -52,6 +53,7 @@
                 <td class="pc-header2">{{t.ip|default:"" }}</td>
                 <td class="pc-header2">{{t.telefon_number|default:"" }}</td>
                 <td class="pc-header2">{{ t.rdb_user|default:"" }}</td>
+                <td class="pc-header2">{{ t.email|default:"" }}</td>
                 <td class="pc-header2">{{ t.note|default:"" }}</td>
             </tr>
         {% endfor %}
