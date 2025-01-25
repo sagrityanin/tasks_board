@@ -78,4 +78,5 @@ class PcListForm(forms.Form):
                                        choices=[('title', 'По названию'),
                                                 ('telefon_number', 'По номеру телефона'),
                                                 ('ip', 'По ip'),
-                                                ('rdb_user', 'По RDB логину')])
+                                                ('rdb_user', 'По RDB логину'),
+                                                ('email', 'По email')])
