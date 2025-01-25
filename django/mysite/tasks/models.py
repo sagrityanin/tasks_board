@@ -116,6 +116,7 @@ class Pc(TimeStampMixin, UUINMixin):
     telefon_number = models.CharField(verbose_name=_('telefon_number'), max_length=128, blank=True, null=True)
     ip = models.CharField(verbose_name='ip', max_length=16, blank=True, null=True)
     rdb_user = models.CharField(verbose_name=_('rdb_user'), max_length=128, blank=True, null=True)
+    email = models.CharField(verbose_name=_('email'), max_length=64, blank=True, null=True)
     note = models.TextField(verbose_name=_('note'), blank=True, null=True)
 
     class Meta:

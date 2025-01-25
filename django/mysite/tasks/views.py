@@ -56,7 +56,8 @@ class PcList(ListPcMixin):
             query = query.filter(Q(title__icontains=search)
                                   | Q(telefon_number__icontains=search)
                                   | Q(ip__icontains=search)
-                                  | Q(rdb_user__icontains=search))
+                                  | Q(rdb_user__icontains=search)
+                                  | Q(email__icontains=search))
         if sort_field := self.request.GET.get("sort_form"):
             query = query.order_by(sort_field)
         else:
