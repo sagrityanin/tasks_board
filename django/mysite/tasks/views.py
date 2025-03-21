@@ -131,8 +131,9 @@ class UserActiveTasks(ListTasksMixin):
 
     def get_queryset(self):
         tasks = Task.objects.filter(executor=self.request.user.person.id).filter(
-            status=StatusModel.objects.get(Q(title="Создана") | Q(title="В работе"))).order_by("-time_updated").select_related(
-            "executor", "status").order_by("time_updated")
+            Q(status=StatusModel.objects.get(title="Создана")) 
+            | Q(status=StatusModel.objects.get(title="В работе"))).order_by(
+            "-time_updated").select_related("executor", "status").order_by("time_updated")
         return tasks
 
 
