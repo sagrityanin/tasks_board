@@ -1,6 +1,7 @@
 import os
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User as UserClass
 from django.contrib import auth
 from django.db import transaction
@@ -26,9 +27,11 @@ status = {"создана": "Активные задачи", "выполнена
           "отклонена": "Отклоненные задачи", "all": "Все задачи"}
 
 
-class PcList(ListPcMixin):
+class PcList(ListPcMixin, LoginRequiredMixin):
     form_class = PcListForm
     model = Pc
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = self.get_context()

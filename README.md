@@ -23,8 +23,8 @@ docker build ./nginx -t sagrityanin4/tasks_board_proxy:1.0
 docker push sagrityanin4/tasks_board_proxy:1.0
 docker build ./django/celery -t sagrityanin4/tasks_board_worker:1.3
 docker push sagrityanin4/tasks_board_worker:1.3
-docker build ./django -t sagrityanin4/tasks_board_app:1.3
-docker push sagrityanin4/tasks_board_app:1.3
+docker build ./django -t sagrityanin4/tasks_board_app:1.4
+docker push sagrityanin4/tasks_board_app:1.4
 
 ### Миграции
 - docker build ./django -f ./django/Dockerfile_init -t sagrityanin4/tasks_board_init:1.2
