@@ -1,4 +1,5 @@
 TAG="1.0"
+APP_TAG="<1.4>"
 
 # Postgres
 POSTGRES_DB="tasks"

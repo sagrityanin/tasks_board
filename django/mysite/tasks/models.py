@@ -1,5 +1,5 @@
 import uuid
-
+import datetime
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.contrib.auth.models import User
@@ -46,7 +46,7 @@ class StatusModel(TimeStampMixin, UUINMixin):
 class Task(TimeStampMixin, UUINMixin):
     title = models.CharField(verbose_name=_('title'), max_length=255)
     note = models.TextField(verbose_name=_('note'), blank=True)
-    start_date = models.DateField(verbose_name='start_date', blank=True)
+    start_date = models.DateField(verbose_name='start_date', blank=True, default=datetime.date.today)
     activate_status = models.BooleanField(default=True)
     is_visible = models.BooleanField(verbose_name=_('is_visible'), default=True)
     status = models.ForeignKey("StatusModel", verbose_name=_("Status"), on_delete=models.CASCADE,

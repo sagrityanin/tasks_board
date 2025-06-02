@@ -19,7 +19,7 @@ services:
     # env_file: .env
 
   task-app:
-    image: sagrityanin4/tasks_board_init:1.2
+    image: sagrityanin4/tasks_board_init:${APP_TAG}
     container_name: task_app
     environment:
       - THREADS=without
